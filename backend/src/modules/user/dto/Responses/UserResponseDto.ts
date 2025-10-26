@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserFromDb } from '../../../../shared/types/db';
+import { UserFromDb } from '../../types';
 
 interface IUserResponseDtoParams {
   user: UserFromDb;
