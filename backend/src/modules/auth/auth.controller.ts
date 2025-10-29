@@ -7,6 +7,7 @@ import { REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAX_AGE_TIME } from './constan
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUserResponse } from './dto/Responses/AuthUserResponse';
 import { LoginDto } from './dto/Requests/LoginDto';
+import { Cookies } from '../../decorators/Cookies.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -41,7 +42,9 @@ export class AuthController {
   }
 
   @Get('refresh')
-  refresh() {}
+  refresh(@Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string, @Res({ passthrough: true }) res: Response) {
+    return this.useAuthMethod(res, () => this.authService.refresh(refreshToken));
+  }
 
   @Delete('logout')
   logout() {}
