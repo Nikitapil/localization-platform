@@ -4,12 +4,14 @@ import { CreateUserDto } from '../user/dto/Requests/CreateUserDto';
 import { AuthService } from './auth.service';
 import { UserWithTokenData } from './types';
 import { REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAX_AGE_TIME } from './constants';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthUserResponse } from './dto/Responses/AuthUserResponse';
 import { LoginDto } from './dto/Requests/LoginDto';
 import { Cookies } from '../../decorators/Cookies.decorator';
 import { AuthRequired } from './decorators/AuthRequired.decorator';
+import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -33,23 +35,47 @@ export class AuthController {
     type: AuthUserResponse
   })
   @Post('register')
-  register(@Body() dto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+  register(@Body() dto: CreateUserDto, @Res({ passthrough: true }) res: Response): Promise<AuthUserResponse> {
     return this.useAuthMethod(res, () => this.authService.register(dto));
   }
-  // TODO Swagger
+
+  @ApiOperation({ summary: 'Login', operationId: 'login' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully logged in.',
+    type: AuthUserResponse
+  })
   @Post('login')
-  login(@Body() dto: LoginDto, @Res() res: Response) {
+  login(@Body() dto: LoginDto, @Res() res: Response): Promise<AuthUserResponse> {
     return this.useAuthMethod(res, () => this.authService.login(dto));
   }
-  // TODO Swagger
+
+  @ApiOperation({ summary: 'Refresh auth tokens', operationId: 'refresh' })
+  @ApiResponse({
+    status: 200,
+    description: 'Token refreshed.',
+    type: AuthUserResponse
+  })
   @Get('refresh')
-  refresh(@Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string, @Res({ passthrough: true }) res: Response) {
+  refresh(
+    @Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<AuthUserResponse> {
     return this.useAuthMethod(res, () => this.authService.refresh(refreshToken));
   }
-  // TODO Swagger
+
+  @ApiOperation({ summary: 'log out', operationId: 'logout' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully logged out.',
+    type: SuccessMessageDto
+  })
   @AuthRequired()
   @Delete('logout')
-  logout(@Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string, @Res({ passthrough: true }) res: Response) {
+  logout(
+    @Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<SuccessMessageDto> {
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
     return this.authService.logout(refreshToken);
   }
