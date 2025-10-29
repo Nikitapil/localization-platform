@@ -6,6 +6,7 @@ import { UserWithTokenData } from './types';
 import { REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAX_AGE_TIME } from './constants';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUserResponse } from './dto/Responses/AuthUserResponse';
+import { LoginDto } from './dto/Requests/LoginDto';
 
 @Controller('auth')
 export class AuthController {
@@ -35,7 +36,9 @@ export class AuthController {
   }
 
   @Post('login')
-  login() {}
+  login(@Body() dto: LoginDto, @Res() res: Response) {
+    return this.useAuthMethod(res, () => this.authService.login(dto));
+  }
 
   @Get('refresh')
   refresh() {}

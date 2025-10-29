@@ -11,7 +11,7 @@ export class ProfileService {
     });
 
     if (profile) {
-      throw new ConflictException({ email: 'Profile with this name already exists' });
+      throw new ConflictException({ profileName: 'Profile with this name already exists' });
     }
   }
 
@@ -21,7 +21,7 @@ export class ProfileService {
     });
 
     if (!profile) {
-      throw new NotFoundException({ email: 'Profile not found' });
+      throw new NotFoundException({ profileId: 'Profile not found' });
     }
   }
 }
