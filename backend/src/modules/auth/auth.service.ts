@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/Requests/CreateUserDto';
@@ -7,6 +7,7 @@ import { UserResponseDto } from '../user/dto/Responses/UserResponseDto';
 import { UserToken } from './types';
 import { LoginDto } from './dto/Requests/LoginDto';
 import bcrypt from 'bcryptjs';
+import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,19 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async createUserWithTokenData({ user, lastRefreshToken }: { user: UserResponseDto; lastRefreshToken?: string }) {
+  private async removeRefreshToken(token: string) {
+    await this.prismaService.refreshToken.delete({
+      where: { token }
+    });
+  }
+
+  private async createUserWithTokenData({
+    user,
+    lastRefreshToken
+  }: {
+    user: UserResponseDto;
+    lastRefreshToken?: string;
+  }) {
     const accessToken = this.jwtService.sign<UserToken>(
       { id: user.id, profileId: user.profileId },
       {
@@ -34,9 +47,7 @@ export class AuthService {
     );
 
     if (lastRefreshToken) {
-      await this.prismaService.refreshToken.delete({
-        where: { token: lastRefreshToken }
-      });
+      await this.removeRefreshToken(lastRefreshToken);
     }
 
     await this.prismaService.refreshToken.create({
@@ -61,13 +72,13 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException({ password: 'Wrong email or password' });
+      throw new BadRequestException({ password: 'Wrong email or password' });
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException({ password: 'Wrong email or password' });
+      throw new BadRequestException({ password: 'Wrong email or password' });
     }
 
     const userResponseDto = await this.userService.getUserDtoByEmail(user.email);
@@ -81,7 +92,7 @@ export class AuthService {
     });
 
     if (!payload) {
-      throw new UnauthorizedException({ message: 'Unauthorized' });
+      throw new BadRequestException({ message: 'Unauthorized' });
     }
 
     const tokenFromDb = await this.prismaService.refreshToken.findUnique({
@@ -92,15 +103,20 @@ export class AuthService {
     });
 
     if (!tokenFromDb) {
-      throw new UnauthorizedException({ message: 'Unauthorized' });
+      throw new BadRequestException({ message: 'Unauthorized' });
     }
 
     const user = await this.userService.getUserDtoByEmail(tokenFromDb.user.email);
 
     if (!user || user.id !== payload.id) {
-      throw new UnauthorizedException({ message: 'Unauthorized' });
+      throw new BadRequestException({ message: 'Unauthorized' });
     }
 
     return this.createUserWithTokenData({ user: user, lastRefreshToken: token });
+  }
+
+  async logout(token: string) {
+    await this.removeRefreshToken(token);
+    return new SuccessMessageDto();
   }
 }

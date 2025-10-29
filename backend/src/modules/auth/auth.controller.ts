@@ -8,6 +8,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUserResponse } from './dto/Responses/AuthUserResponse';
 import { LoginDto } from './dto/Requests/LoginDto';
 import { Cookies } from '../../decorators/Cookies.decorator';
+import { AuthRequired } from './decorators/AuthRequired.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -35,17 +36,21 @@ export class AuthController {
   register(@Body() dto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
     return this.useAuthMethod(res, () => this.authService.register(dto));
   }
-
+  // TODO Swagger
   @Post('login')
   login(@Body() dto: LoginDto, @Res() res: Response) {
     return this.useAuthMethod(res, () => this.authService.login(dto));
   }
-
+  // TODO Swagger
   @Get('refresh')
   refresh(@Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string, @Res({ passthrough: true }) res: Response) {
     return this.useAuthMethod(res, () => this.authService.refresh(refreshToken));
   }
-
+  // TODO Swagger
+  @AuthRequired()
   @Delete('logout')
-  logout() {}
+  logout(@Cookies(REFRESH_TOKEN_COOKIE_NAME) refreshToken: string, @Res({ passthrough: true }) res: Response) {
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+    return this.authService.logout(refreshToken);
+  }
 }
