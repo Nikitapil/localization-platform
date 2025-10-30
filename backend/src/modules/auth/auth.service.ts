@@ -82,7 +82,6 @@ export class AuthService {
     }
 
     const userResponseDto = await this.userService.getUserDtoByEmail(user.email);
-
     return this.createUserWithTokenData({ user: userResponseDto });
   }
 

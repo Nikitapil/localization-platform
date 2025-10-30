@@ -24,7 +24,7 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       maxAge: REFRESH_TOKEN_MAX_AGE_TIME
     });
-
+    console.log(accessToken);
     return { user, accessToken };
   }
 
@@ -46,7 +46,7 @@ export class AuthController {
     type: AuthUserResponse
   })
   @Post('login')
-  login(@Body() dto: LoginDto, @Res() res: Response): Promise<AuthUserResponse> {
+  login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response): Promise<AuthUserResponse> {
     return this.useAuthMethod(res, () => this.authService.login(dto));
   }
 
