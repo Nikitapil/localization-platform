@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
@@ -8,6 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+
+  app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder().setTitle('Localization-platform').setVersion('1.0').build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
@@ -18,12 +20,20 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       exceptionFactory: (errors) => {
-        const preparedErrors = errors.reduce((acc, error) => {
-          acc[error.property] = Object.values(error.constraints || {})
-            .map((err: string) => err)
-            .join(', ');
-          return acc;
-        }, {});
+        const prepareErrors = (errs: ValidationError[]) => {
+          return errs.reduce((acc, error) => {
+            if (error.children?.length) {
+              acc = { ...acc, [error.property]: prepareErrors(error.children) };
+              return acc;
+            }
+            acc[error.property] = Object.values(error.constraints || {})
+              .map((err: string) => err)
+              .join(', ');
+            return acc;
+          }, {});
+        };
+
+        const preparedErrors = prepareErrors(errors);
         return new BadRequestException(preparedErrors);
       }
     })

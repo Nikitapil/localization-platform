@@ -5,8 +5,6 @@ import { IsMatch } from '../../../../validation/Match.validator';
 import { IsOneOfProvided } from '../../../../validation/OneOf.validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-// TODO проверить работу этого декоратора
-@IsOneOfProvided(['profileId', 'createProfileFields'])
 export class CreateUserDto {
   @ApiProperty({ description: 'user email', type: String })
   @IsEmail()
@@ -19,7 +17,8 @@ export class CreateUserDto {
       minLength: 8,
       minLowercase: 1,
       minUppercase: 1,
-      minNumbers: 1
+      minNumbers: 1,
+      minSymbols: 0
     },
     { message: 'Password should have min length of 8 symbols, 1 lowercase symbol 1 uppercase symbol and 1 number' }
   )
@@ -49,4 +48,7 @@ export class CreateUserDto {
   @ValidateNested()
   @Type(() => CreateProfileFieldsDto)
   createProfileFields?: CreateProfileFieldsDto;
+
+  @IsOneOfProvided(['profileId', 'createProfileFields'])
+  profileData?: unknown;
 }
