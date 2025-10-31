@@ -24,7 +24,6 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       maxAge: REFRESH_TOKEN_MAX_AGE_TIME
     });
-    console.log(accessToken);
     return { user, accessToken };
   }
 

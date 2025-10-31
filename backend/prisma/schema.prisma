@@ -53,19 +53,23 @@ model RefreshToken {
 }
 
 model Lang {
-  name String @unique
+  id String @id @default(uuid())
+
+  name String
 
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   profileId String
 
   translations Translation[]
+
+  @@unique([profileId, name])
 }
 
 model Translation {
   id String @id @default(uuid())
 
-  lang     Lang   @relation(fields: [langName], references: [name], onDelete: Cascade, onUpdate: Cascade)
-  langName String
+  lang   Lang   @relation(fields: [langId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  langId String
 
   text    Text   @relation(fields: [textKey], references: [key], onDelete: Cascade, onUpdate: Cascade)
   textKey String
