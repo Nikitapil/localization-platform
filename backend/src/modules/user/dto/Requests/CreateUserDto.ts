@@ -1,8 +1,8 @@
 import { CreateProfileFieldsDto } from '../../../profile/dto/CreateProfileFieldsDto';
 import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsMatch } from '../../../../validation/Match.validator';
-import { IsOneOfProvided } from '../../../../validation/OneOf.validator';
+import { IsMatch } from '../../../../shared/validation/Match.validator';
+import { IsOneOfProvided } from '../../../../shared/validation/OneOf.validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {

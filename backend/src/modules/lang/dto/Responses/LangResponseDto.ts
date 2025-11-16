@@ -9,4 +9,10 @@ export class LangResponseDto {
 
   @ApiProperty({ type: String })
   profileId: string;
+
+  @ApiProperty({ type: String })
+  createdAt: Date;
+
+  @ApiProperty({ type: String })
+  updatedAt: Date;
 }

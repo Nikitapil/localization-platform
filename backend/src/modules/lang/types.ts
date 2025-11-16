@@ -1,6 +1,7 @@
 import { AddLangDto } from './dto/Requests/AddLangDto';
 import { UserToken } from '../auth/types';
 import { EditLangDto } from './dto/Requests/EditLangDto';
+import { GetLangsDto } from './dto/Requests/GetLangsDto';
 
 export interface AddLangParams {
   dto: AddLangDto;
@@ -14,5 +15,10 @@ export interface EditLangParams {
 
 export interface DeleteLangParams {
   id: string;
+  user: UserToken;
+}
+
+export interface GetLangsParams {
+  dto: GetLangsDto;
   user: UserToken;
 }

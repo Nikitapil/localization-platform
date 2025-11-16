@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { LangService } from './lang.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { AddLangDto } from './dto/Requests/AddLangDto';
@@ -8,6 +8,8 @@ import { LangResponseDto } from './dto/Responses/LangResponseDto';
 import { EditLangDto } from './dto/Requests/EditLangDto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
+import { GetLangsDto } from './dto/Requests/GetLangsDto';
+import { LangsResponseDto } from './dto/Responses/LangsResponseDto';
 
 @Controller('lang')
 export class LangController {
@@ -37,13 +39,27 @@ export class LangController {
     return this.langService.editLang({ dto, user });
   }
 
+  @ApiOperation({ summary: 'Delete Lang', operationId: 'deleteLang' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lang edited.',
+    type: SuccessMessageDto
+  })
   @AuthRequired()
   @Delete(':id')
   deleteLang(@Param('id') id: string, @User() user: UserToken): Promise<SuccessMessageDto> {
     return this.langService.deleteLang({ id, user });
   }
 
+  @ApiOperation({ summary: 'Get Langs', operationId: 'getLangs' })
+  @ApiResponse({
+    status: 200,
+    description: 'Langs list',
+    type: LangsResponseDto
+  })
   @AuthRequired()
   @Get()
-  getLangs() {}
+  getLangs(@Query() dto: GetLangsDto, @User() user: UserToken): Promise<LangsResponseDto> {
+    return this.langService.getLangs({ dto, user });
+  }
 }

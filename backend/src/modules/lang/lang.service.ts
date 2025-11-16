@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { AddLangParams, DeleteLangParams, EditLangParams } from './types';
+import { AddLangParams, DeleteLangParams, EditLangParams, GetLangsParams } from './types';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 
 @Injectable()
@@ -76,5 +76,21 @@ export class LangService {
     });
 
     return new SuccessMessageDto();
+  }
+
+  async getLangs({ dto, user }: GetLangsParams) {
+    const where = { profileId: user.profileId };
+    const langs = await this.prismaService.lang.findMany({
+      where,
+      orderBy: {
+        updatedAt: 'desc'
+      },
+      take: dto.limit,
+      skip: dto.offset
+    });
+
+    const totalCount = await this.prismaService.lang.count({ where });
+
+    return { langs, totalCount };
   }
 }
