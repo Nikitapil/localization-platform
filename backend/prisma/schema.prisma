@@ -20,6 +20,8 @@ model Profile {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  texts Text[]
 }
 
 model User {
@@ -75,21 +77,27 @@ model Translation {
   lang   Lang   @relation(fields: [langId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   langId String
 
-  text    Text   @relation(fields: [textKey], references: [key], onDelete: Cascade, onUpdate: Cascade)
+  text    Text   @relation(fields: [textKey], references: [id], onDelete: Cascade, onUpdate: Cascade)
   textKey String
 
   value String
 }
 
 model Text {
-  key String @unique
+  id String @id @default(uuid())
+  key String
 
   translations Translation[]
 
-  updatedBy User   @relation(fields: [userId], references: [id])
+  updatedBy User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)  
+  profileId String
 
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  @@unique([key, profileId])
 }

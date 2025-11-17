@@ -6,11 +6,12 @@ import type { UserToken } from '../auth/types';
 import { User } from '../auth/decorators/User.decorator';
 import { LangResponseDto } from './dto/Responses/LangResponseDto';
 import { EditLangDto } from './dto/Requests/EditLangDto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 import { GetLangsDto } from './dto/Requests/GetLangsDto';
 import { LangsResponseDto } from './dto/Responses/LangsResponseDto';
 
+@ApiTags('Lang')
 @Controller('lang')
 export class LangController {
   constructor(private readonly langService: LangService) {}
