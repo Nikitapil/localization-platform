@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { TextService } from './text.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { CreateTextDto } from './dto/Requests/CreateTextDto';
@@ -8,6 +8,8 @@ import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 import { EditTextDto } from './dto/Requests/EditTextDto';
+import { GetTextsDto } from './dto/Requests/GetTextsDto';
+import { TextsListResponseDto } from './dto/Responses/TextsListResponseDto';
 
 @ApiTags('text')
 @Controller('text')
@@ -62,6 +64,15 @@ export class TextController {
     return this.textService.editText({ dto, user });
   }
 
+  @ApiOperation({ summary: 'Edit text', operationId: 'getTexts' })
+  @ApiResponse({
+    status: 200,
+    description: 'Text list returned..',
+    type: TextsListResponseDto
+  })
+  @AuthRequired()
   @Get()
-  getTexts() {}
+  getTexts(@Query() dto: GetTextsDto, @User() user: UserToken): Promise<TextsListResponseDto> {
+    return this.textService.getTexts({ dto, user });
+  }
 }

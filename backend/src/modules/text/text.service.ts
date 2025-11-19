@@ -1,10 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTextParams, DeleteTextParams, EditTextParams, GetTextParams } from './types';
+import { CreateTextParams, DeleteTextParams, EditTextParams, GetTextParams, GetTextsParams } from './types';
 import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { getTextInclude } from './helpers/db-helpers';
 import { Prisma } from '../../../generated/prisma/index';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
+import { TextsListResponseDto } from './dto/Responses/TextsListResponseDto';
 
 @Injectable()
 export class TextService {
@@ -93,5 +94,33 @@ export class TextService {
     });
 
     return new TextResponseDto(updatedText);
+  }
+
+  async getTexts({ dto, user }: GetTextsParams) {
+    const where: Prisma.TextWhereInput = {
+      profileId: user.profileId
+    };
+
+    if (dto.searchString) {
+      where.translations = {
+        some: {
+          value: {
+            contains: dto.searchString || '',
+            mode: 'insensitive'
+          }
+        }
+      };
+    }
+
+    const texts = await this.prismaService.text.findMany({
+      where,
+      take: dto.limit,
+      skip: dto.offset,
+      include: getTextInclude()
+    });
+
+    const totalCount = await this.prismaService.text.count({ where });
+
+    return new TextsListResponseDto({ textsFromDb: texts, totalCount });
   }
 }
