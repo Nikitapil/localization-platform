@@ -1,5 +1,6 @@
 import { UserToken } from '../auth/types';
 import { CreateTextDto } from './dto/Requests/CreateTextDto';
+import { EditTextDto } from './dto/Requests/EditTextDto';
 
 export interface CreateTextParams {
   dto: CreateTextDto;
@@ -13,6 +14,11 @@ export interface GetTextParams {
 
 export interface DeleteTextParams {
   key: string;
+  user: UserToken;
+}
+
+export interface EditTextParams {
+  dto: EditTextDto;
   user: UserToken;
 }
 

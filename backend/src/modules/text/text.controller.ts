@@ -7,6 +7,7 @@ import type { UserToken } from '../auth/types';
 import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
+import { EditTextDto } from './dto/Requests/EditTextDto';
 
 @ApiTags('text')
 @Controller('text')
@@ -37,13 +38,29 @@ export class TextController {
     return this.textService.getTextByKey({ key, user });
   }
 
+  @ApiOperation({ summary: 'Delete text', operationId: 'deleteText' })
+  @ApiResponse({
+    status: 200,
+    description: 'Text deleted..',
+    type: SuccessMessageDto
+  })
+  @AuthRequired()
   @Delete(':key')
   deleteText(@Param('key') key: string, @User() user: UserToken): Promise<SuccessMessageDto> {
     return this.textService.deleteText({ key, user });
   }
 
+  @ApiOperation({ summary: 'Edit text', operationId: 'editText' })
+  @ApiResponse({
+    status: 200,
+    description: 'Text edited..',
+    type: TextResponseDto
+  })
+  @AuthRequired()
   @Put()
-  editText() {}
+  editText(@Body() dto: EditTextDto, @User() user: UserToken): Promise<TextResponseDto> {
+    return this.textService.editText({ dto, user });
+  }
 
   @Get()
   getTexts() {}
