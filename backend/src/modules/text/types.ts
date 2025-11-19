@@ -6,6 +6,11 @@ export interface CreateTextParams {
   user: UserToken;
 }
 
+export interface GetTextParams {
+  key: string;
+  user: UserToken;
+}
+
 export interface TextLangFromDb {
   id: string;
   name: string;

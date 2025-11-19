@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { TextService } from './text.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { CreateTextDto } from './dto/Requests/CreateTextDto';
@@ -14,7 +14,7 @@ export class TextController {
 
   @ApiOperation({ summary: 'Create Text', operationId: 'createText' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Text created..',
     type: TextResponseDto
   })
@@ -24,10 +24,19 @@ export class TextController {
     return this.textService.createText({ dto, user });
   }
 
-  @Get()
-  getText() {}
+  @ApiOperation({ summary: 'Get Text by key', operationId: 'getTextByKey' })
+  @ApiResponse({
+    status: 200,
+    description: 'Text received..',
+    type: TextResponseDto
+  })
+  @AuthRequired()
+  @Get(':key')
+  getTextByKey(@Param('key') key: string, @User() user: UserToken): Promise<TextResponseDto> {
+    return this.textService.getTextByKey({ key, user });
+  }
 
-  @Delete()
+  @Delete(':key')
   deleteText() {}
 
   @Put()

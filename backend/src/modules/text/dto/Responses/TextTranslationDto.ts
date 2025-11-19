@@ -14,7 +14,7 @@ export class TextTranslationDto {
 
   constructor(textTranslation: TextTranslationFromDb) {
     this.id = textTranslation.id;
-    this.lang = textTranslation.lang;
+    this.lang = new TextLangDto(textTranslation.lang);
     this.value = textTranslation.value;
   }
 }
