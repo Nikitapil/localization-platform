@@ -11,6 +11,11 @@ export interface GetTextParams {
   user: UserToken;
 }
 
+export interface DeleteTextParams {
+  key: string;
+  user: UserToken;
+}
+
 export interface TextLangFromDb {
   id: string;
   name: string;

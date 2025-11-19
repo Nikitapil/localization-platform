@@ -6,6 +6,7 @@ import { User } from '../auth/decorators/User.decorator';
 import type { UserToken } from '../auth/types';
 import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 
 @ApiTags('text')
 @Controller('text')
@@ -37,7 +38,9 @@ export class TextController {
   }
 
   @Delete(':key')
-  deleteText() {}
+  deleteText(@Param('key') key: string, @User() user: UserToken): Promise<SuccessMessageDto> {
+    return this.textService.deleteText({ key, user });
+  }
 
   @Put()
   editText() {}

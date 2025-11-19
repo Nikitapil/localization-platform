@@ -1,21 +1,27 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTextParams, GetTextParams } from './types';
+import { CreateTextParams, DeleteTextParams, GetTextParams } from './types';
 import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { getTextInclude } from './helpers/db-helpers';
+import { Prisma } from '../../../generated/prisma/index';
+import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 
 @Injectable()
 export class TextService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  private createGetTextByKeyWhereInput(key: string, profileId: string): Prisma.TextWhereUniqueInput {
+    return {
+      key_profileId: {
+        key,
+        profileId
+      }
+    };
+  }
+
   async throwIfTextExist({ key, profileId }: { key: string; profileId: string }) {
     const text = await this.prismaService.text.findUnique({
-      where: {
-        key_profileId: {
-          key,
-          profileId
-        }
-      }
+      where: this.createGetTextByKeyWhereInput(key, profileId)
     });
 
     if (text) {
@@ -40,12 +46,7 @@ export class TextService {
 
   async getTextByKey({ key, user }: GetTextParams): Promise<TextResponseDto> {
     const text = await this.prismaService.text.findUnique({
-      where: {
-        key_profileId: {
-          key,
-          profileId: user.profileId
-        }
-      },
+      where: this.createGetTextByKeyWhereInput(key, user.profileId),
       include: getTextInclude()
     });
 
@@ -56,5 +57,18 @@ export class TextService {
     return new TextResponseDto(text);
   }
 
-  async deleteText() {}
+  async deleteText({ key, user }: DeleteTextParams) {
+    const where = this.createGetTextByKeyWhereInput(key, user.profileId);
+    const text = await this.prismaService.text.findUnique({
+      where
+    });
+
+    if (!text) {
+      throw new NotFoundException({ message: 'Text not found' });
+    }
+
+    await this.prismaService.text.delete({ where });
+
+    return new SuccessMessageDto();
+  }
 }
