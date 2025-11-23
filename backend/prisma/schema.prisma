@@ -81,6 +81,8 @@ model Translation {
   textKey String
 
   value String
+
+  @@unique([textKey, langId])
 }
 
 model Text {
