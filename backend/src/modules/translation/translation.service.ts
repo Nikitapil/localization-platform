@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTranslationParams } from './types';
 import { PrismaService } from '../../prisma/prisma.service';
 import { TextTranslationDto } from './dto/Responses/TextTranslationDto';
+import { EditTranslationDto } from './dto/Requests/EditTranslationDto';
 
 @Injectable()
 export class TranslationService {
@@ -43,5 +44,19 @@ export class TranslationService {
     });
 
     return new TextTranslationDto(newTranslation);
+  }
+
+  async editTranslation(dto: EditTranslationDto) {
+    const translation = await this.prismaService.translation.update({
+      where: { id: dto.id },
+      data: {
+        value: dto.value
+      },
+      include: {
+        lang: true
+      }
+    });
+
+    return new TextTranslationDto(translation);
   }
 }
