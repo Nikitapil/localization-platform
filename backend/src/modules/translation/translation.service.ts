@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTranslationParams } from './types';
 import { PrismaService } from '../../prisma/prisma.service';
-import { TextTranslationDto } from '../text/dto/Responses/TextTranslationDto';
+import { TextTranslationDto } from './dto/Responses/TextTranslationDto';
 
 @Injectable()
 export class TranslationService {

@@ -4,7 +4,7 @@ import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { CreateTextDto } from './dto/Requests/CreateTextDto';
 import { User } from '../auth/decorators/User.decorator';
 import type { UserToken } from '../auth/types';
-import { TextResponseDto } from '../translation/dto/Responses/TextResponseDto';
+import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 import { EditTextDto } from './dto/Requests/EditTextDto';

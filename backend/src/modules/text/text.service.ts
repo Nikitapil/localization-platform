@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTextParams, DeleteTextParams, EditTextParams, GetTextParams, GetTextsParams } from './types';
-import { TextResponseDto } from '../translation/dto/Responses/TextResponseDto';
+import { TextResponseDto } from './dto/Responses/TextResponseDto';
 import { getTextInclude } from './helpers/db-helpers';
 import { Prisma } from '../../../generated/prisma/index';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';

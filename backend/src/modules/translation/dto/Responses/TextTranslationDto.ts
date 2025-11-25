@@ -1,7 +1,7 @@
-import { TextLangDto } from './TextLangDto';
+import { TextLangDto } from '../../../text/dto/Responses/TextLangDto';
 import { ApiProperty } from '@nestjs/swagger';
 
-import {TextTranslationFromDb} from "../../../translation/types";
+import { TextTranslationFromDb } from '../../types';
 
 export class TextTranslationDto {
   @ApiProperty({ type: String })

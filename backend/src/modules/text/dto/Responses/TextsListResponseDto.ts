@@ -1,4 +1,4 @@
-import { TextResponseDto } from '../../../translation/dto/Responses/TextResponseDto';
+import { TextResponseDto } from './TextResponseDto';
 import { TextFromDb } from '../../types';
 import { ApiProperty } from '@nestjs/swagger';
 
