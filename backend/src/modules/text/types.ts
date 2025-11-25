@@ -2,6 +2,7 @@ import { UserToken } from '../auth/types';
 import { CreateTextDto } from './dto/Requests/CreateTextDto';
 import { EditTextDto } from './dto/Requests/EditTextDto';
 import { GetTextsDto } from './dto/Requests/GetTextsDto';
+import { TextTranslationFromDb } from '../translation/types';
 
 export interface CreateTextParams {
   dto: CreateTextDto;
@@ -34,14 +35,6 @@ export interface TextLangFromDb {
   profileId: string;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface TextTranslationFromDb {
-  id: string;
-  lang: TextLangFromDb;
-  langId: string;
-  textKey: string;
-  value: string;
 }
 
 export interface TextFromDb {
