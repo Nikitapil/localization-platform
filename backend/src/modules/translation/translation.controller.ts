@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TranslationService } from './translation.service';
 import { CreateTranslationDto } from './dto/Requests/CreateTranslationDto';
@@ -6,6 +6,7 @@ import { User } from '../auth/decorators/User.decorator';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import type { UserToken } from '../auth/types';
 import { TextTranslationDto } from './dto/Responses/TextTranslationDto';
+import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 
 @ApiTags('translation')
 @Controller('translation')
@@ -34,5 +35,17 @@ export class TranslationController {
   @Put()
   editTranslation(@Body() dto: TextTranslationDto): Promise<TextTranslationDto> {
     return this.translationService.editTranslation(dto);
+  }
+
+  @ApiOperation({ summary: 'Delete translation', operationId: 'deleteTranslation' })
+  @ApiResponse({
+    status: 200,
+    description: 'Translation deleted successfully..',
+    type: SuccessMessageDto
+  })
+  @AuthRequired()
+  @Delete(':id')
+  deleteTranslation(@Param('id') id: string): Promise<SuccessMessageDto> {
+    return this.translationService.deleteTranslation(id);
   }
 }
