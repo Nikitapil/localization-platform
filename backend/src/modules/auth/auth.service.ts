@@ -8,6 +8,7 @@ import { UserToken } from './types';
 import { LoginDto } from './dto/Requests/LoginDto';
 import bcrypt from 'bcryptjs';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
+import { MessageDto } from '../../dto/MessageDto';
 
 @Injectable()
 export class AuthService {
@@ -61,9 +62,15 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
-    const user = await this.userService.createUser(dto);
+    const { user, confirmed } = await this.userService.createUser(dto);
 
-    return this.createUserWithTokenData(user);
+    if (!confirmed) {
+      return new MessageDto(
+        'User has been created, please wait until your profile admin confirm your registration and then you will be able to sign in'
+      );
+    }
+
+    return this.createUserWithTokenData({ user });
   }
 
   async login(dto: LoginDto) {

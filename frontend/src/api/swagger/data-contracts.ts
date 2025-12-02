@@ -10,6 +10,10 @@
  * ---------------------------------------------------------------
  */
 
+export interface MessageDto {
+  message: string;
+}
+
 export interface CreateProfileFieldsDto {
   /** Profile name */
   name: string;
@@ -26,10 +30,13 @@ export interface CreateUserDto {
   name: string;
   /** user last name */
   lastname: string;
-  /** profile id */
-  profileId: string;
   /** new profile fields */
   createProfileFields: CreateProfileFieldsDto;
+}
+
+export interface LoginDto {
+  email: string;
+  password: string;
 }
 
 export interface UserResponseDto {
@@ -45,11 +52,6 @@ export interface UserResponseDto {
 export interface AuthUserResponse {
   user: UserResponseDto;
   accessToken: string;
-}
-
-export interface LoginDto {
-  email: string;
-  password: string;
 }
 
 export interface SuccessMessageDto {

@@ -2,7 +2,6 @@ import { CreateProfileFieldsDto } from '../../../profile/dto/CreateProfileFields
 import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsMatch } from '../../../../shared/validation/Match.validator';
-import { IsOneOfProvided } from '../../../../shared/validation/OneOf.validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -38,17 +37,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastname: string;
 
-  @ApiProperty({ description: 'profile id', type: String })
-  @IsString()
-  @IsOptional()
-  profileId?: string;
-
   @ApiProperty({ description: 'new profile fields', type: CreateProfileFieldsDto })
-  @IsOptional()
   @ValidateNested()
   @Type(() => CreateProfileFieldsDto)
-  createProfileFields?: CreateProfileFieldsDto;
-
-  @IsOneOfProvided(['profileId', 'createProfileFields'])
-  profileData?: unknown;
+  createProfileFields: CreateProfileFieldsDto;
 }

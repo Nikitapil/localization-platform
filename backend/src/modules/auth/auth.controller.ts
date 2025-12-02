@@ -4,20 +4,28 @@ import { CreateUserDto } from '../user/dto/Requests/CreateUserDto';
 import { AuthService } from './auth.service';
 import { UserWithTokenData } from './types';
 import { REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAX_AGE_TIME } from './constants';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { AuthUserResponse } from './dto/Responses/AuthUserResponse';
 import { LoginDto } from './dto/Requests/LoginDto';
 import { Cookies } from '../../decorators/Cookies.decorator';
 import { AuthRequired } from './decorators/AuthRequired.decorator';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
+import { MessageDto } from '../../dto/MessageDto';
 
 @ApiTags('Auth')
 @Controller('auth')
+@ApiExtraModels(MessageDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private async useAuthMethod(res: Response, method: () => Promise<UserWithTokenData>) {
-    const { user, refreshToken, accessToken } = await method();
+  private async useAuthMethod<T extends UserWithTokenData | MessageDto>(res: Response, method: () => Promise<T>) {
+    const result = await method();
+
+    if (result instanceof MessageDto) {
+      return result;
+    }
+
+    const { user, accessToken, refreshToken } = result;
 
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
       httpOnly: true,
@@ -31,10 +39,15 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully registered.',
-    type: AuthUserResponse
+    schema: {
+      oneOf: [{ $ref: getSchemaPath(AuthUserResponse) }, { $ref: getSchemaPath(MessageDto) }]
+    }
   })
   @Post('register')
-  register(@Body() dto: CreateUserDto, @Res({ passthrough: true }) res: Response): Promise<AuthUserResponse> {
+  register(
+    @Body() dto: CreateUserDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<AuthUserResponse | MessageDto> {
     return this.useAuthMethod(res, () => this.authService.register(dto));
   }
 

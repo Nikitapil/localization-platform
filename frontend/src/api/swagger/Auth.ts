@@ -14,6 +14,7 @@ import type {
   AuthUserResponse,
   CreateUserDto,
   LoginDto,
+  MessageDto,
   SuccessMessageDto,
 } from "./data-contracts";
 import { ContentType, HttpClient, type RequestParams } from "./http-client";
@@ -30,7 +31,7 @@ export class AuthApi<
    * @request POST:/api/auth/register
    */
   register = (data: CreateUserDto, params: RequestParams = {}) =>
-    this.request<AuthUserResponse, any>({
+    this.request<AuthUserResponse | MessageDto, any>({
       path: `/api/auth/register`,
       method: "POST",
       body: data,

@@ -8,6 +8,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  STANDART
+  MAIN
+}
+
 model Profile {
   id String @id @default(uuid())
 
@@ -37,6 +42,10 @@ model User {
 
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   profileId String
+
+  role UserRole @default(STANDART)
+
+  confirmed Boolean @default(false)
 
   texts Text[]
 
@@ -86,7 +95,7 @@ model Translation {
 }
 
 model Text {
-  id String @id @default(uuid())
+  id  String @id @default(uuid())
   key String
 
   translations Translation[]
@@ -94,7 +103,7 @@ model Text {
   updatedBy User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
 
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)  
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   profileId String
 
   createdAt DateTime @default(now())

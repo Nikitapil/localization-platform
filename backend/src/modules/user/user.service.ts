@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from './dto/Requests/CreateUserDto';
-import { Prisma } from 'generated/prisma';
+import { Prisma, UserRole } from 'generated/prisma';
 import bcrypt from 'bcryptjs';
 import { ProfileService } from '../profile/profile.service';
 import { getSafeUserOmit } from '../../shared/db-helpers/safeUserOmit';
@@ -25,23 +25,28 @@ export class UserService {
   }
 
   async createUser(dto: CreateUserDto) {
-    const { email, password, name, lastname, profileId, createProfileFields } = dto;
+    const { email, password, name, lastname, createProfileFields } = dto;
     await this.throwIfUserAlreadyExist(dto.email);
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const profile = await this.prismaService.profile.findUnique({
+      where: {
+        name: createProfileFields?.name
+      }
+    });
+
+    const role = profile ? UserRole.STANDART : UserRole.MAIN;
+    const confirmed = !profile;
 
     let profileData:
       | Pick<Required<Prisma.UserCreateArgs['data']>, 'profileId'>
       | Pick<Required<Prisma.UserCreateArgs['data']>, 'profile'>
       | null = null;
 
-    if (profileId) {
-      await this.profileService.throwIfProfileNotExist(profileId);
-      profileData = { profileId };
-    }
-
-    if (createProfileFields) {
-      await this.profileService.throwIfProfileAlreadyExist(createProfileFields.name);
+    if (profile) {
+      profileData = { profileId: profile.id };
+    } else {
       profileData = {
         profile: {
           create: {
@@ -61,12 +66,14 @@ export class UserService {
         password: hashedPassword,
         name,
         lastname,
+        role,
+        confirmed,
         ...profileData
       },
       omit: getSafeUserOmit()
     });
 
-    return { user: new UserResponseDto({ user }) };
+    return { user: new UserResponseDto({ user }), confirmed };
   }
 
   async getUserDtoByEmail(email: string) {
