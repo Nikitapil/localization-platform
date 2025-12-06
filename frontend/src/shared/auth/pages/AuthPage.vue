@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AuthForm from '../components/AuthForm.vue';
+</script>
 
 <template>
-  <div>Auth page</div>
+  <div>
+    <AuthForm />
+  </div>
 </template>

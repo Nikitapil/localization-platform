@@ -7,7 +7,7 @@ import AppHeader from '@/components/layout/AppHeader.vue';
     <AppHeader />
 
     <main>
-      <div class="container mx-auto">
+      <div class="container mx-auto my-5">
         <RouterView />
       </div>
     </main>

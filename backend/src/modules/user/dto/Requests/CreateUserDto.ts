@@ -1,5 +1,5 @@
 import { CreateProfileFieldsDto } from '../../../profile/dto/CreateProfileFieldsDto';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, ValidateNested } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsMatch } from '../../../../shared/validation/Match.validator';
 import { ApiProperty } from '@nestjs/swagger';
