@@ -24,4 +24,12 @@ export class ProfileService {
       throw new NotFoundException({ profileId: 'Profile not found' });
     }
   }
+
+  async checkIfProfileExist(profileName: string) {
+    const profile = await this.prismaService.profile.findUnique({
+      where: { name: profileName }
+    });
+
+    return !!profile;
+  }
 }

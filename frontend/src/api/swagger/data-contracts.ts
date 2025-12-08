@@ -120,6 +120,10 @@ export interface CreateTranslationDto {
   value: string;
 }
 
+export interface GetIsProfileExistParams {
+  name: string;
+}
+
 export interface GetLangsParams {
   limit: number;
   offset: number;

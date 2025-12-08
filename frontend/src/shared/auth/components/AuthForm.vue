@@ -48,10 +48,7 @@ const switchForm = () => {
       </button>
     </div>
 
-    <form
-      class="md:max-w-1/2 flex flex-col gap-4 w-full"
-      @submit.prevent="validate"
-    >
+    <form class="md:max-w-1/2 flex flex-col gap-4 w-full">
       <AppInput
         v-model="form.email"
         placeholder="Email"
