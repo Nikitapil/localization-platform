@@ -10,7 +10,7 @@ import AppInput from '../../../components/controls/AppInput.vue';
 import { computed, ref } from 'vue';
 import { useForm } from 'vee-validate';
 
-const { validate } = useForm();
+const { validate, setErrors, errors } = useForm();
 
 const isRegister = ref(false);
 const form = ref({
@@ -28,7 +28,10 @@ const title = computed(() => (isRegister.value ? 'Register' : 'Login'));
 const switchQuestion = computed(() => (isRegister.value ? 'Already have an account?' : "Don't have an account?"));
 const switchButtonText = computed(() => (isRegister.value ? 'Login' : 'Register'));
 
-const switchForm = () => (isRegister.value = !isRegister.value);
+const switchForm = () => {
+  isRegister.value = !isRegister.value;
+  setErrors(Object.fromEntries(Object.entries(errors.value).map((entr) => [entr[0], ''])));
+};
 </script>
 
 <template>
@@ -70,6 +73,7 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           id="profile"
           name="profile"
           validationName="Profile name"
+          rules="required"
         >
           <template #label-icon>
             <Profile class="h-4 w-4" />
@@ -84,6 +88,7 @@ const switchForm = () => (isRegister.value = !isRegister.value);
             name="name"
             class="flex-1"
             validationName="First name"
+            rules="required"
           >
             <template #label-icon>
               <UserCircle class="h-4 w-4" />
@@ -97,6 +102,7 @@ const switchForm = () => (isRegister.value = !isRegister.value);
             name="lastname"
             class="flex-1"
             validationName="Last name"
+            rules="required"
           >
             <template #label-icon>
               <UserCircleFilled class="h-4 w-4" />
@@ -113,6 +119,7 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           name="password"
           class="flex-1"
           type="password"
+          rules="required"
           validationName="Password"
         >
           <template #label-icon>
@@ -128,6 +135,7 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           class="flex-1"
           type="password"
           name="repeat-password"
+          rules="match:password|required"
           validationName="Repeated password"
         >
           <template #label-icon>
