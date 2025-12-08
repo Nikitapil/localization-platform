@@ -1,24 +1,28 @@
 <script setup lang="ts">
 import type { InputHTMLAttributes } from 'vue';
 
-interface Props extends /* @vue-ignore */ InputHTMLAttributes {
+interface Props {
   placeholder: string;
-  id: string
+  id: string;
+  inputmode?: InputHTMLAttributes['inputmode'];
+  type?: InputHTMLAttributes['type'];
 }
 
 const props = defineProps<Props>();
 
-console.log(props)
+const model = defineModel<string>();
 </script>
 
 <template>
   <div class="relative">
     <input
-      v-bind="props"
+      v-model="model"
       :id="props.id"
       :class="{ 'pt-4!': !!props.placeholder }"
+      :type="props.type"
       class="block px-2.5 pb-2.5 pt-2.5 w-full text-sm text-heading bg-transparent rounded-base border-1 border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
       placeholder=" "
+      :inputmode="props.inputmode"
     />
 
     <label
