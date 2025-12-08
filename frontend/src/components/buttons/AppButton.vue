@@ -39,7 +39,7 @@ const className = computed(() => {
   <button
     :type="props.type"
     :class="className"
-    :disabled="props.loading"
+    :disabled="props.loading || props.disabled"
   >
     <Spinner
       v-if="props.loading"

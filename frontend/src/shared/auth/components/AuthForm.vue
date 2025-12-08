@@ -8,6 +8,9 @@ import Profile from '../../../components/icons/Profile.vue';
 import Envelope from '../../../components/icons/Envelope.vue';
 import AppInput from '../../../components/controls/AppInput.vue';
 import { computed, ref } from 'vue';
+import { useForm } from 'vee-validate';
+
+const { validate } = useForm();
 
 const isRegister = ref(false);
 const form = ref({
@@ -44,13 +47,16 @@ const switchForm = () => (isRegister.value = !isRegister.value);
 
     <form
       class="md:max-w-1/2 flex flex-col gap-4 w-full"
-      @submit.prevent
+      @submit.prevent="validate"
     >
       <AppInput
         v-model="form.email"
         placeholder="Email"
         id="email"
         inputmode="email"
+        name="email"
+        rules="required"
+        validationName="Email"
       >
         <template #label-icon>
           <Envelope class="h-4 w-4" />
@@ -62,6 +68,8 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           v-model="form.createProfileFields.name"
           placeholder="Profile name"
           id="profile"
+          name="profile"
+          validationName="Profile name"
         >
           <template #label-icon>
             <Profile class="h-4 w-4" />
@@ -73,7 +81,9 @@ const switchForm = () => (isRegister.value = !isRegister.value);
             v-model="form.name"
             placeholder="First name"
             id="name"
+            name="name"
             class="flex-1"
+            validationName="First name"
           >
             <template #label-icon>
               <UserCircle class="h-4 w-4" />
@@ -84,7 +94,9 @@ const switchForm = () => (isRegister.value = !isRegister.value);
             v-model="form.lastname"
             placeholder="Last name"
             id="lastname"
+            name="lastname"
             class="flex-1"
+            validationName="Last name"
           >
             <template #label-icon>
               <UserCircleFilled class="h-4 w-4" />
@@ -98,8 +110,10 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           v-model="form.password"
           placeholder="Password"
           id="password"
+          name="password"
           class="flex-1"
           type="password"
+          validationName="Password"
         >
           <template #label-icon>
             <Lock class="h-4 w-4" />
@@ -113,6 +127,8 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           id="repeat-password"
           class="flex-1"
           type="password"
+          name="repeat-password"
+          validationName="Repeated password"
         >
           <template #label-icon>
             <Repeat class="h-4 w-4" />
