@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Repeat from '../../../components/icons/Repeat.vue'
+import AppButton from '../../../components/buttons/AppButton.vue';
+import Repeat from '../../../components/icons/Repeat.vue';
 import Lock from '../../../components/icons/Lock.vue';
 import UserCircleFilled from '../../../components/icons/UserCircleFilled.vue';
 import UserCircle from '../../../components/icons/UserCircle.vue';
@@ -41,7 +42,10 @@ const switchForm = () => (isRegister.value = !isRegister.value);
       </button>
     </div>
 
-    <form class="md:max-w-1/2 flex flex-col gap-4 w-full">
+    <form
+      class="md:max-w-1/2 flex flex-col gap-4 w-full"
+      @submit.prevent
+    >
       <AppInput
         v-model="form.email"
         placeholder="Email"
@@ -115,6 +119,8 @@ const switchForm = () => (isRegister.value = !isRegister.value);
           </template>
         </AppInput>
       </div>
+
+      <AppButton :text="title" />
     </form>
   </div>
 </template>
