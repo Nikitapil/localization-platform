@@ -9,8 +9,11 @@ import Envelope from '../../../components/icons/Envelope.vue';
 import AppInput from '../../../components/controls/AppInput.vue';
 import { computed, ref } from 'vue';
 import { useForm } from 'vee-validate';
+import { useAuthStore } from '../AuthStore';
 
 const { validate, setErrors, errors } = useForm();
+
+const store = useAuthStore();
 
 const isRegister = ref(false);
 const form = ref({
@@ -31,6 +34,21 @@ const switchButtonText = computed(() => (isRegister.value ? 'Login' : 'Register'
 const switchForm = () => {
   isRegister.value = !isRegister.value;
   setErrors(Object.fromEntries(Object.entries(errors.value).map((entr) => [entr[0], ''])));
+};
+
+const login = () => {};
+const register = () => {};
+const checkIfProfileExist = async () => {
+  const isExist = await store.getIsProfileExist({ name: form.value.createProfileFields.name });
+  if (isExist) {}
+};
+
+const onSubmit = () => {
+  if (isRegister.value) {
+    return checkIfProfileExist();
+  } else {
+    login();
+  }
 };
 </script>
 
