@@ -10,6 +10,7 @@
  * ---------------------------------------------------------------
  */
 
+import { useApi } from "../utils/useApi";
 import type {
   CreateTextDto,
   DeleteTextParams,
@@ -112,3 +113,15 @@ export class TextApi<
       ...params,
     });
 }
+
+const instance = new TextApi();
+
+export const useTextApi = () => {
+  return {
+    createText: useApi(instance.createText),
+    editText: useApi(instance.editText),
+    getTexts: useApi(instance.getTexts),
+    getTextByKey: useApi(instance.getTextByKey),
+    deleteText: useApi(instance.deleteText),
+  };
+};

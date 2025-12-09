@@ -10,6 +10,7 @@
  * ---------------------------------------------------------------
  */
 
+import { useApi } from "../utils/useApi";
 import type {
   CreateTranslationDto,
   DeleteTranslationParams,
@@ -77,3 +78,13 @@ export class TranslationApi<
       ...params,
     });
 }
+
+const instance = new TranslationApi();
+
+export const useTranslationApi = () => {
+  return {
+    createTranslation: useApi(instance.createTranslation),
+    editTranslation: useApi(instance.editTranslation),
+    deleteTranslation: useApi(instance.deleteTranslation),
+  };
+};

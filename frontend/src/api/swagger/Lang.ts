@@ -10,6 +10,7 @@
  * ---------------------------------------------------------------
  */
 
+import { useApi } from "../utils/useApi";
 import type {
   AddLangDto,
   DeleteLangParams,
@@ -93,3 +94,14 @@ export class LangApi<
       ...params,
     });
 }
+
+const instance = new LangApi();
+
+export const useLangApi = () => {
+  return {
+    addLang: useApi(instance.addLang),
+    editLang: useApi(instance.editLang),
+    getLangs: useApi(instance.getLangs),
+    deleteLang: useApi(instance.deleteLang),
+  };
+};

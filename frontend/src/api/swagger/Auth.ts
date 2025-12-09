@@ -10,6 +10,7 @@
  * ---------------------------------------------------------------
  */
 
+import { useApi } from "../utils/useApi";
 import type {
   AuthUserResponse,
   CreateUserDto,
@@ -87,3 +88,14 @@ export class AuthApi<
       ...params,
     });
 }
+
+const instance = new AuthApi();
+
+export const useAuthApi = () => {
+  return {
+    register: useApi(instance.register),
+    login: useApi(instance.login),
+    refresh: useApi(instance.refresh),
+    logout: useApi(instance.logout),
+  };
+};

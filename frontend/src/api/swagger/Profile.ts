@@ -10,6 +10,7 @@
  * ---------------------------------------------------------------
  */
 
+import { useApi } from "../utils/useApi";
 import type { GetIsProfileExistParams } from "./data-contracts";
 import { HttpClient, type RequestParams } from "./http-client";
 
@@ -35,3 +36,11 @@ export class ProfileApi<
       ...params,
     });
 }
+
+const instance = new ProfileApi();
+
+export const useProfileApi = () => {
+  return {
+    getIsProfileExist: useApi(instance.getIsProfileExist),
+  };
+};
