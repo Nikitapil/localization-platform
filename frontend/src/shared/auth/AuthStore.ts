@@ -12,7 +12,8 @@ export const useAuthStore = defineStore('authStore', () => {
 
   const {
     register: { isLoading: isRegisterLoading, call: registerApi },
-    login: { isLoading: isLoginLoading, call: loginApi }
+    login: { isLoading: isLoginLoading, call: loginApi },
+    refresh: { isLoading: isRefreshLoading, call: refreshApi }
   } = useAuthApi();
   const {
     getIsProfileExist: { isLoading: isProfileExistLoading, call: getIsProfileExist }
@@ -51,7 +52,14 @@ export const useAuthStore = defineStore('authStore', () => {
     }
   };
 
-  const refreshToken = async () => {};
+  const refreshToken = async () => {
+    const { data } = await refreshApi();
+
+    if (data) {
+      accessToken.value = data.accessToken;
+      user.value = data.user;
+    }
+  };
 
   const resetErrors = () => {
     errors.value = null;
@@ -64,6 +72,7 @@ export const useAuthStore = defineStore('authStore', () => {
     isLoginLoading,
     isRegisterLoading,
     errors,
+    isRefreshLoading,
     refreshToken,
     getIsProfileExist,
     register,
