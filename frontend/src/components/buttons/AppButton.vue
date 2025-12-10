@@ -52,5 +52,7 @@ const className = computed(() => {
     <span class="mx-auto">
       {{ props.text }}
     </span>
+
+    <slot name="append"></slot>
   </button>
 </template>
