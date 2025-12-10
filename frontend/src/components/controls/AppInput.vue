@@ -11,6 +11,7 @@ interface Props {
   name: string;
   rules?: MaybeRef<RuleExpression<unknown>>;
   validationName?: string;
+  externalError?: string;
 }
 
 const props = defineProps<Props>();
@@ -25,8 +26,10 @@ const { errorMessage, validate, meta } = useField(props.name, props.rules, {
 });
 
 const isError = computed(() => {
-  return meta.validated && errorMessage.value;
+  return (meta.validated && errorMessage.value) || props.externalError;
 });
+
+const error = computed(() => errorMessage.value || props.externalError);
 
 const handleChange = () => {
   if (isError.value) {
@@ -72,6 +75,11 @@ const classes = computed(() => ({
         {{ props.placeholder }}
       </label>
     </div>
-    <p class="mt-1 text-xs text-fg-danger-strong">{{ errorMessage }}</p>
+    <p
+      v-if="isError"
+      class="mt-1 text-xs text-fg-danger-strong"
+    >
+      {{ error }}
+    </p>
   </div>
 </template>

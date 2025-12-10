@@ -11,6 +11,11 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api');
 
+  app.enableCors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+  });
+
   const config = new DocumentBuilder().setTitle('Localization-platform').setVersion('1.0').build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);

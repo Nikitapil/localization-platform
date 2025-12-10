@@ -3,7 +3,9 @@ import AppButton from '../buttons/AppButton.vue';
 import Modal from './Modal.vue';
 import type { DefaultModalProps } from './types';
 
-interface Props extends DefaultModalProps {}
+interface Props extends DefaultModalProps {
+  loading?: boolean;
+}
 
 const props = defineProps<Props>();
 
@@ -25,10 +27,12 @@ const emit = defineEmits<{
           text="Cancel"
           class="mr-2"
           appearence="transparent"
+          :disabled="props.loading"
           @click="emit('cancel')"
         />
         <AppButton
           text="Confirm"
+          :loading="props.loading"
           @click="emit('confirm')"
         />
       </div>

@@ -88,6 +88,12 @@ export class AuthService {
       throw new BadRequestException({ password: 'Wrong email or password' });
     }
 
+    if (!user.confirmed) {
+      throw new BadRequestException({
+        email: 'Your account still not confirmed. Please ask your profile admin to confirm your account'
+      });
+    }
+
     const userResponseDto = await this.userService.getUserDtoByEmail(user.email);
     return this.createUserWithTokenData({ user: userResponseDto });
   }

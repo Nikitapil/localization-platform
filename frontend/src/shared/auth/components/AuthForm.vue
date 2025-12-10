@@ -12,6 +12,7 @@ import { computed, ref } from 'vue';
 import { useForm } from 'vee-validate';
 import { useAuthStore } from '../AuthStore';
 import { useModal } from '@/components/modals/utils';
+import { toast } from 'vue3-toastify';
 
 const { validate, setErrors, errors } = useForm();
 
@@ -38,22 +39,46 @@ const switchButtonText = computed(() => (isRegister.value ? 'Login' : 'Register'
 const switchForm = () => {
   isRegister.value = !isRegister.value;
   setErrors(Object.fromEntries(Object.entries(errors.value).map((entr) => [entr[0], ''])));
+  store.resetErrors();
 };
 
 const login = () => {};
-const register = () => {};
-const checkIfProfileExist = async () => {
-  const isExist = await store.getIsProfileExist({ name: form.value.createProfileFields.name });
-  if (isExist) {
+const register = async () => {
+  await store.register(form.value);
+  confirmationModal.close();
+  if (!store.errors) {
+    if (!store.user) {
+      switchForm();
+    }
   }
-
-  confirmationModal.open({
-    title: 'Hello registration',
-    content: 'Hi Apple'
-  });
 };
 
-const onSubmit = () => {
+const checkIfProfileExist = async () => {
+  const { data, error } = await store.getIsProfileExist({ name: form.value.createProfileFields.name });
+
+  if (error) {
+    toast.error('Something went wrong please try again later.', { theme: 'colored', hideProgressBar: true });
+    return;
+  }
+
+  if (data) {
+    confirmationModal.open({
+      title: 'This profile already exist',
+      content: 'Your account will need to be accepted by profile admin for start using it.'
+    });
+  } else {
+    confirmationModal.open({
+      title: `Profile with name ${form.value.createProfileFields.name} doesn't exist`,
+      content: 'New profile will be created and your account will be added as main profile account.'
+    });
+  }
+};
+
+const onSubmit = async () => {
+  const { valid } = await validate();
+  if (!valid) {
+    return;
+  }
   if (isRegister.value) {
     return checkIfProfileExist();
   } else {
@@ -88,6 +113,8 @@ const onSubmit = () => {
         name="email"
         rules="required"
         validationName="Email"
+        :disabled="store.isProfileExistLoading"
+        :externalError="store.errors?.email"
       >
         <template #label-icon>
           <Envelope class="h-4 w-4" />
@@ -102,6 +129,7 @@ const onSubmit = () => {
           name="profile"
           validationName="Profile name"
           rules="required"
+          :disabled="store.isProfileExistLoading"
         >
           <template #label-icon>
             <Profile class="h-4 w-4" />
@@ -117,6 +145,8 @@ const onSubmit = () => {
             class="flex-1"
             validationName="First name"
             rules="required"
+            :disabled="store.isProfileExistLoading"
+            :externalError="store.errors?.name"
           >
             <template #label-icon>
               <UserCircle class="h-4 w-4" />
@@ -131,6 +161,8 @@ const onSubmit = () => {
             class="flex-1"
             validationName="Last name"
             rules="required"
+            :disabled="store.isProfileExistLoading"
+            :externalError="store.errors?.lastname"
           >
             <template #label-icon>
               <UserCircleFilled class="h-4 w-4" />
@@ -149,6 +181,8 @@ const onSubmit = () => {
           type="password"
           rules="required"
           validationName="Password"
+          :disabled="store.isProfileExistLoading"
+          :externalError="store.errors?.password"
         >
           <template #label-icon>
             <Lock class="h-4 w-4" />
@@ -165,6 +199,8 @@ const onSubmit = () => {
           name="repeat-password"
           rules="match:password|required"
           validationName="Repeated password"
+          :disabled="store.isProfileExistLoading"
+          :externalError="store.errors?.repeatedPassword"
         >
           <template #label-icon>
             <Repeat class="h-4 w-4" />
@@ -172,11 +208,16 @@ const onSubmit = () => {
         </AppInput>
       </div>
 
-      <AppButton :text="title" />
+      <AppButton
+        :text="title"
+        :loading="store.isProfileExistLoading"
+      />
     </form>
     <ConfirmModal
       :showableComponent="confirmationModal"
+      :loading="store.isRegisterLoading"
       @cancel="confirmationModal.close"
+      @confirm="register"
     />
   </div>
 </template>
