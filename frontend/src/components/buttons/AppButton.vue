@@ -5,7 +5,7 @@ import { computed, type ButtonHTMLAttributes } from 'vue';
 interface Props {
   type?: ButtonHTMLAttributes['type'];
   text?: string;
-  appearence?: 'primary';
+  appearence?: 'primary' | 'transparent';
   loading?: boolean;
   disabled?: boolean;
 }
@@ -21,6 +21,10 @@ const className = computed(() => {
 
   if (props.appearence === 'primary' && !props.disabled) {
     classes += ' text-white bg-brand focus:ring-brand-medium hover:bg-brand-strong';
+  }
+
+  if (props.appearence === 'transparent' && !props.disabled) {
+    classes += ' text-black bg-transparent hover:bg-neutral-secondary-medium focus:ring-neutral-tertiary shadow-none!';
   }
 
   if (props.disabled) {

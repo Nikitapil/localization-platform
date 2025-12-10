@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ConfirmModal from '../../../components/modals/ConfirmModal.vue';
 import AppButton from '../../../components/buttons/AppButton.vue';
 import Repeat from '../../../components/icons/Repeat.vue';
 import Lock from '../../../components/icons/Lock.vue';
@@ -10,6 +11,7 @@ import AppInput from '../../../components/controls/AppInput.vue';
 import { computed, ref } from 'vue';
 import { useForm } from 'vee-validate';
 import { useAuthStore } from '../AuthStore';
+import { useModal } from '@/components/modals/utils';
 
 const { validate, setErrors, errors } = useForm();
 
@@ -27,6 +29,8 @@ const form = ref({
   }
 });
 
+const confirmationModal = useModal();
+
 const title = computed(() => (isRegister.value ? 'Register' : 'Login'));
 const switchQuestion = computed(() => (isRegister.value ? 'Already have an account?' : "Don't have an account?"));
 const switchButtonText = computed(() => (isRegister.value ? 'Login' : 'Register'));
@@ -40,7 +44,13 @@ const login = () => {};
 const register = () => {};
 const checkIfProfileExist = async () => {
   const isExist = await store.getIsProfileExist({ name: form.value.createProfileFields.name });
-  if (isExist) {}
+  if (isExist) {
+  }
+
+  confirmationModal.open({
+    title: 'Hello registration',
+    content: 'Hi Apple'
+  });
 };
 
 const onSubmit = () => {
@@ -66,7 +76,10 @@ const onSubmit = () => {
       </button>
     </div>
 
-    <form class="md:max-w-1/2 flex flex-col gap-4 w-full">
+    <form
+      class="md:max-w-1/2 flex flex-col gap-4 w-full"
+      @submit.prevent="onSubmit"
+    >
       <AppInput
         v-model="form.email"
         placeholder="Email"
@@ -161,5 +174,9 @@ const onSubmit = () => {
 
       <AppButton :text="title" />
     </form>
+    <ConfirmModal
+      :showableComponent="confirmationModal"
+      @cancel="confirmationModal.close"
+    />
   </div>
 </template>
