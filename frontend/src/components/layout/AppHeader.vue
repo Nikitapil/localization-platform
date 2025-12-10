@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import AppButton from '../buttons/AppButton.vue';
 import ArrowRight from '../icons/ArrowRight.vue';
 import { useAuthStore } from '@/shared/auth/AuthStore';
+import { useRouting } from '@/router/useRouting';
+import { RouteNames } from '@/router/routes';
 
-const router = useRouter();
-
+const { goToAuth } = useRouting();
 const authStore = useAuthStore();
-
-const goToAuth = () => router.push({ name: 'auth' });
 </script>
 
 <template>
   <header class="px-2 py-4 bg-blue-100">
     <div class="container mx-auto flex justify-between items-center">
-      <RouterLink :to="{ name: 'main' }">
+      <RouterLink :to="{ name: RouteNames.MAIN }">
         <h1 class="text-l font-bold tracking-wider text-gray-800">Localization platform</h1>
       </RouterLink>
 

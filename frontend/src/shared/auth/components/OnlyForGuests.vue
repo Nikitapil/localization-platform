@@ -2,13 +2,14 @@
 import { watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../AuthStore';
+import { useRouting } from '@/router/useRouting';
 
 const store = useAuthStore();
-const router = useRouter();
+const { goToMain } = useRouting();
 
 watchEffect(() => {
   if (store.user) {
-    router.push({ name: 'main' });
+    goToMain();
   }
 });
 </script>
