@@ -1,5 +1,5 @@
 import { useAuthApi } from '@/api/swagger/Auth';
-import type { CreateUserDto, UserResponseDto } from '@/api/swagger/data-contracts';
+import type { CreateUserDto, LoginDto, UserResponseDto } from '@/api/swagger/data-contracts';
 import { useProfileApi } from '@/api/swagger/Profile';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -11,7 +11,8 @@ export const useAuthStore = defineStore('authStore', () => {
   const errors = ref<Record<string, string> | null>(null);
 
   const {
-    register: { isLoading: isRegisterLoading, call: registerApi }
+    register: { isLoading: isRegisterLoading, call: registerApi },
+    login: { isLoading: isLoginLoading, call: loginApi }
   } = useAuthApi();
   const {
     getIsProfileExist: { isLoading: isProfileExistLoading, call: getIsProfileExist }
@@ -35,6 +36,21 @@ export const useAuthStore = defineStore('authStore', () => {
     }
   };
 
+  const login = async (request: LoginDto) => {
+    const { data, error } = await loginApi(request);
+    if (error && typeof error === 'object') {
+      errors.value = error as {};
+      return;
+    } else {
+      errors.value = null;
+    }
+
+    if (data) {
+      accessToken.value = data.accessToken;
+      user.value = data.user;
+    }
+  };
+
   const refreshToken = async () => {};
 
   const resetErrors = () => {
@@ -45,11 +61,13 @@ export const useAuthStore = defineStore('authStore', () => {
     accessToken,
     user,
     isProfileExistLoading,
+    isLoginLoading,
     isRegisterLoading,
     errors,
     refreshToken,
     getIsProfileExist,
     register,
-    resetErrors
+    resetErrors,
+    login
   };
 });

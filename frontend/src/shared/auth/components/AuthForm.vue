@@ -36,13 +36,17 @@ const title = computed(() => (isRegister.value ? 'Register' : 'Login'));
 const switchQuestion = computed(() => (isRegister.value ? 'Already have an account?' : "Don't have an account?"));
 const switchButtonText = computed(() => (isRegister.value ? 'Login' : 'Register'));
 
+const isFormLoading = computed(() => store.isProfileExistLoading || store.isLoginLoading);
+
 const switchForm = () => {
   isRegister.value = !isRegister.value;
   setErrors(Object.fromEntries(Object.entries(errors.value).map((entr) => [entr[0], ''])));
   store.resetErrors();
 };
 
-const login = () => {};
+const login = async () => {
+  await store.login({ email: form.value.email, password: form.value.password });
+};
 const register = async () => {
   await store.register(form.value);
   confirmationModal.close();
@@ -113,7 +117,7 @@ const onSubmit = async () => {
         name="email"
         rules="required"
         validationName="Email"
-        :disabled="store.isProfileExistLoading"
+        :disabled="isFormLoading"
         :externalError="store.errors?.email"
       >
         <template #label-icon>
@@ -129,7 +133,7 @@ const onSubmit = async () => {
           name="profile"
           validationName="Profile name"
           rules="required"
-          :disabled="store.isProfileExistLoading"
+          :disabled="isFormLoading"
         >
           <template #label-icon>
             <Profile class="h-4 w-4" />
@@ -145,7 +149,7 @@ const onSubmit = async () => {
             class="flex-1"
             validationName="First name"
             rules="required"
-            :disabled="store.isProfileExistLoading"
+            :disabled="isFormLoading"
             :externalError="store.errors?.name"
           >
             <template #label-icon>
@@ -161,7 +165,7 @@ const onSubmit = async () => {
             class="flex-1"
             validationName="Last name"
             rules="required"
-            :disabled="store.isProfileExistLoading"
+            :disabled="isFormLoading"
             :externalError="store.errors?.lastname"
           >
             <template #label-icon>
@@ -181,7 +185,7 @@ const onSubmit = async () => {
           type="password"
           rules="required"
           validationName="Password"
-          :disabled="store.isProfileExistLoading"
+          :disabled="isFormLoading"
           :externalError="store.errors?.password"
         >
           <template #label-icon>
@@ -199,7 +203,7 @@ const onSubmit = async () => {
           name="repeat-password"
           rules="match:password|required"
           validationName="Repeated password"
-          :disabled="store.isProfileExistLoading"
+          :disabled="isFormLoading"
           :externalError="store.errors?.repeatedPassword"
         >
           <template #label-icon>
@@ -210,7 +214,7 @@ const onSubmit = async () => {
 
       <AppButton
         :text="title"
-        :loading="store.isProfileExistLoading"
+        :loading="isFormLoading"
       />
     </form>
     <ConfirmModal
