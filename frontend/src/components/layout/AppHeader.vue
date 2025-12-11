@@ -4,6 +4,7 @@ import ArrowRight from '../icons/ArrowRight.vue';
 import { useAuthStore } from '@/shared/auth/AuthStore';
 import { useRouting } from '@/router/useRouting';
 import { RouteNames } from '@/router/routes';
+import Dropdown from '../dropdown/Dropdown.vue';
 
 const { goToAuth } = useRouting();
 const authStore = useAuthStore();
@@ -26,6 +27,12 @@ const authStore = useAuthStore();
             <ArrowRight class="ml-2" />
           </template>
         </AppButton>
+
+        <Dropdown>
+          <template #trigger>
+            <button>Test dropdown</button>
+          </template>
+        </Dropdown>
       </div>
     </div>
   </header>

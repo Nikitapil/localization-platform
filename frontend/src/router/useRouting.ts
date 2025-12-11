@@ -1,4 +1,6 @@
+import { useRouter } from 'vue-router';
 import { RouteNames } from './routes';
+
 export const useRouting = () => {
   const router = useRouter();
 
@@ -10,5 +12,5 @@ export const useRouting = () => {
     router.push({ name: RouteNames.AUTH });
   };
 
-  return { goToMain, goToAuth }
+  return { goToMain, goToAuth };
 };
