@@ -14,11 +14,20 @@ import Language from '../icons/Language.vue';
 import Moon from '../icons/Moon.vue';
 import Toggle from '../controls/Toggle.vue';
 import DoorOut from '../icons/DoorOut.vue';
+import { useModal } from '../modals/utils';
+import ConfirmModal from '../modals/ConfirmModal.vue';
 
 const { goToAuth } = useRouting();
 const authStore = useAuthStore();
 
+const confirmLogoutModal = useModal();
+
 const user = computed(() => authStore.user);
+
+const onLogout = async () => {
+  await authStore.logout();
+  confirmLogoutModal.close();
+};
 </script>
 
 <template>
@@ -39,83 +48,94 @@ const user = computed(() => authStore.user);
           </template>
         </AppButton>
 
-        <Dropdown v-if="user">
-          <template #trigger>
-            <AppButton text="menu">
-              <template #append>
-                <ArrowDown />
-              </template>
-            </AppButton>
-          </template>
+        <template v-if="user">
+          <Dropdown>
+            <template #trigger>
+              <AppButton text="Menu">
+                <template #append>
+                  <ArrowDown />
+                </template>
+              </AppButton>
+            </template>
 
-          <template #content>
-            <div class="p-2">
-              <div class="px-2.5 py-2 space-x-1.5 text-sm bg-gray-100 rounded">
-                <div class="text-sm">
-                  <div class="font-medium text-heading">{{ user.name }} {{ user.lastname }}</div>
-                  <div class="truncate text-body">{{ user.email }}</div>
+            <template #content>
+              <div class="p-2">
+                <div class="px-2.5 py-2 space-x-1.5 text-sm bg-gray-100 rounded">
+                  <div class="text-sm">
+                    <div class="font-medium text-heading">{{ user.name }} {{ user.lastname }}</div>
+                    <div class="truncate text-body">{{ user.email }}</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <ul
-              class="px-2 pb-2 text-sm text-body font-medium"
-              aria-labelledby="dropdownInformationButton"
-            >
-              <li>
-                <NavListLink
-                  to="not-implemented"
-                  text="Account"
-                >
-                  <template #icon>
-                    <Account />
-                  </template>
-                </NavListLink>
-              </li>
-
-              <li>
-                <NavListLink
-                  to="not-implemented"
-                  text="Profile"
-                >
-                  <template #icon>
-                    <Profile />
-                  </template>
-                </NavListLink>
-              </li>
-              <li>
-                <NavListLink
-                  to="not-implemented"
-                  text="Translations"
-                >
-                  <template #icon>
-                    <Language />
-                  </template>
-                </NavListLink>
-              </li>
-              <li
-                class="flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded mb-1.5"
+              <ul
+                class="px-2 pb-2 text-sm text-body font-medium"
+                aria-labelledby="dropdownInformationButton"
               >
-                <div class="inline-flex items-center gap-1">
-                  <Moon />
-                  Dark mode
-                </div>
-                <Toggle />
-              </li>
+                <li>
+                  <NavListLink
+                    to="not-implemented"
+                    text="Account"
+                  >
+                    <template #icon>
+                      <Account />
+                    </template>
+                  </NavListLink>
+                </li>
 
-              <li class="border-t border-gray-100 pt-1">
-                <NavListLink
-                  text="Sign out"
-                  class="text-red-500"
+                <li>
+                  <NavListLink
+                    to="not-implemented"
+                    text="Profile"
+                  >
+                    <template #icon>
+                      <Profile />
+                    </template>
+                  </NavListLink>
+                </li>
+                <li>
+                  <NavListLink
+                    to="not-implemented"
+                    text="Translations"
+                  >
+                    <template #icon>
+                      <Language />
+                    </template>
+                  </NavListLink>
+                </li>
+                <li
+                  class="flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded mb-1.5"
                 >
-                  <template #icon>
-                    <DoorOut />
-                  </template>
-                </NavListLink>
-              </li>
-            </ul>
-          </template>
-        </Dropdown>
+                  <div class="inline-flex items-center gap-1">
+                    <Moon />
+                    Dark mode
+                  </div>
+                  <Toggle />
+                </li>
+
+                <li class="border-t border-gray-100 pt-1">
+                  <NavListLink
+                    text="Sign out"
+                    class="text-red-500"
+                    @click="confirmLogoutModal.open"
+                  >
+                    <template #icon>
+                      <DoorOut />
+                    </template>
+                  </NavListLink>
+                </li>
+              </ul>
+            </template>
+          </Dropdown>
+          <ConfirmModal
+            :showableComponent="confirmLogoutModal"
+            :loading="authStore.isLogoutLoading"
+            title="You will be logged out from the system"
+            content="Please confirm this action."
+            @cancel="confirmLogoutModal.close"
+            @confirm="onLogout"
+          />
+        </template>
       </div>
     </div>
   </header>

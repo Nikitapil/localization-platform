@@ -5,7 +5,6 @@ const onOpen = () => {
   model.value = true;
 };
 const onClose = () => {
-  console.log('onCLose');
   model.value = false;
 };
 </script>

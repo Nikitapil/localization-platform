@@ -13,7 +13,8 @@ export const useAuthStore = defineStore('authStore', () => {
   const {
     register: { isLoading: isRegisterLoading, call: registerApi },
     login: { isLoading: isLoginLoading, call: loginApi },
-    refresh: { isLoading: isRefreshLoading, call: refreshApi }
+    refresh: { isLoading: isRefreshLoading, call: refreshApi },
+    logout: { isLoading: isLogoutLoading, call: logoutApi }
   } = useAuthApi();
   const {
     getIsProfileExist: { isLoading: isProfileExistLoading, call: getIsProfileExist }
@@ -61,6 +62,12 @@ export const useAuthStore = defineStore('authStore', () => {
     }
   };
 
+  const logout = async () => {
+    await logoutApi();
+    accessToken.value = '';
+    user.value = null;
+  };
+
   const resetErrors = () => {
     errors.value = null;
   };
@@ -73,10 +80,12 @@ export const useAuthStore = defineStore('authStore', () => {
     isRegisterLoading,
     errors,
     isRefreshLoading,
+    isLogoutLoading,
     refreshToken,
     getIsProfileExist,
     register,
     resetErrors,
-    login
+    login,
+    logout
   };
 });
