@@ -99,6 +99,9 @@ export class AuthService {
   }
 
   async refresh(token: string) {
+    if (!token) {
+      throw new BadRequestException({ message: 'Unauthorized' });
+    }
     const payload = await this.jwtService.verifyAsync(token, {
       secret: process.env.JWT_REFRESH_SECRET
     });

@@ -20,7 +20,7 @@ const onClose = () => {
     </div>
     <div
       v-if="model"
-      class="absolute right-0 top-full mt-1 z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg min-w-56 min-h-8"
+      class="absolute p-2 right-0 top-full mt-1 z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg min-w-56 min-h-8"
     >
       <slot name="content"></slot>
     </div>
