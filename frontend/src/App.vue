@@ -22,7 +22,7 @@ init();
   <div v-else>
     <AppHeader />
 
-    <main class="px-2">
+    <main class="px-2 pt-20">
       <div class="container mx-auto my-5">
         <RouterView />
       </div>

@@ -31,7 +31,7 @@ const onLogout = async () => {
 </script>
 
 <template>
-  <header class="px-2 py-4 bg-blue-100">
+  <header class="fixed top-0 w-full px-2 py-4 bg-blue-100 h-20 flex items-center">
     <div class="container mx-auto flex justify-between items-center">
       <RouterLink :to="{ name: RouteNames.MAIN }">
         <h1 class="text-l font-bold tracking-wider text-gray-800">Localization platform</h1>
@@ -74,7 +74,7 @@ const onLogout = async () => {
               >
                 <li>
                   <NavListLink
-                    to="not-implemented"
+                    :to="{ name: RouteNames.ACCOUNT }"
                     text="Account"
                   >
                     <template #icon>

@@ -9,7 +9,6 @@ type TElement = HTMLElement & {
 export const clickOutside: Directive<TElement, TClickOutsideDirectiveValue> = {
   mounted(el, binding) {
     el.clickOutsideEvent = function (event) {
-      console.log(el.contains(event?.target as Node));
       if (!(el === event?.target || el.contains(event?.target as Node))) {
         console.log('here');
         binding.value();
