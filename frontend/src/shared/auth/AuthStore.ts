@@ -30,7 +30,6 @@ export const useAuthStore = defineStore('authStore', () => {
     }
 
     if (data && 'message' in data) {
-      console.log(data);
       toast.info(data.message, { position: 'top-center', style: { width: 'fit-content' } });
     } else if (data) {
       accessToken.value = data.accessToken;
@@ -72,6 +71,8 @@ export const useAuthStore = defineStore('authStore', () => {
     errors.value = null;
   };
 
+  const setUser = (userData: UserResponseDto) => (user.value = userData);
+
   return {
     accessToken,
     user,
@@ -86,6 +87,7 @@ export const useAuthStore = defineStore('authStore', () => {
     register,
     resetErrors,
     login,
-    logout
+    logout,
+    setUser
   };
 });

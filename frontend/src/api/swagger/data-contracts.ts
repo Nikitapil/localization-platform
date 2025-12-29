@@ -10,6 +10,29 @@
  * ---------------------------------------------------------------
  */
 
+export interface EditUserDto {
+  /** user email */
+  email: string;
+  /** user name */
+  name: string;
+  /** user last name */
+  lastname: string;
+}
+
+export interface UserResponseDto {
+  id: string;
+  email: string;
+  name: string;
+  lastname: string;
+  profileId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResponseWithUserDto {
+  user: UserResponseDto;
+}
+
 export interface MessageDto {
   message: string;
 }
@@ -37,16 +60,6 @@ export interface CreateUserDto {
 export interface LoginDto {
   email: string;
   password: string;
-}
-
-export interface UserResponseDto {
-  id: string;
-  email: string;
-  name: string;
-  lastname: string;
-  profileId: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface AuthUserResponse {

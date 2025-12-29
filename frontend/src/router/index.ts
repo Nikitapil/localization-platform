@@ -3,7 +3,7 @@ import MainPage from '@/modules/main/pages/MainPage.vue';
 import AuthPage from '@/shared/auth/pages/AuthPage.vue';
 import { RouteNames } from './routes';
 import AccountPage from '@/modules/account/pages/AccountPage.vue';
-import UserCredentials from '@/modules/account/pages/UserCredentials.vue';
+import UserCredentials from '@/modules/account/pages/UserCredentials/UserCredentials.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

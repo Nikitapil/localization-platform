@@ -9,7 +9,7 @@ const generateApiByPath = async () => {
     moduleNameIndex: 1,
     output: path.resolve(process.cwd(), `./src/api/swagger/`),
     templates: path.resolve(process.cwd(), './bin/ApiGenerator/templates'),
-    url: `${process.env.VITE_API_BASE_URL}/docs-yaml`,
+    url: `${process.env.VITE_API_BASE_URL}/api/docs-yaml`,
     httpClientType: 'axios',
     extractEnums: true,
     extractRequestParams: true,
