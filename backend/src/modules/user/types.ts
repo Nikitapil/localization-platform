@@ -1,3 +1,6 @@
+import { UserToken } from '../auth/types';
+import { EditUserDto } from './dto/Requests/EditUserDto';
+
 export type UserFromDb = {
   id: string;
   email: string;
@@ -7,3 +10,8 @@ export type UserFromDb = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export interface EditUserParams {
+  dto: EditUserDto;
+  user: UserToken;
+}

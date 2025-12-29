@@ -3,16 +3,13 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from './dto/Requests/CreateUserDto';
 import { Prisma, UserRole } from 'generated/prisma';
 import bcrypt from 'bcryptjs';
-import { ProfileService } from '../profile/profile.service';
 import { getSafeUserOmit } from '../../shared/db-helpers/safeUserOmit';
 import { UserResponseDto } from './dto/Responses/UserResponseDto';
+import { EditUserParams } from './types';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly profileService: ProfileService
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   private async throwIfUserAlreadyExist(email: string) {
     const user = await this.prismaService.user.findUnique({
@@ -87,5 +84,31 @@ export class UserService {
     }
 
     return new UserResponseDto({ user });
+  }
+
+  async editUser({ dto, user }: EditUserParams) {
+    const dbUser = await this.prismaService.user.findUnique({
+      where: { id: user.id }
+    });
+
+    if (!dbUser) {
+      throw new NotFoundException({ message: 'User not found' });
+    }
+
+    if (dto.email !== dbUser.email) {
+      await this.throwIfUserAlreadyExist(dto.email);
+    }
+
+    const updatedUser = await this.prismaService.user.update({
+      where: { id: user.id },
+      data: {
+        email: dto.email,
+        name: dto.name,
+        lastname: dto.lastname
+      },
+      omit: getSafeUserOmit()
+    });
+
+    return { user: new UserResponseDto({ user: updatedUser }) };
   }
 }
