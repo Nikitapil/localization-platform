@@ -5,7 +5,8 @@ import { Prisma, UserRole } from 'generated/prisma';
 import bcrypt from 'bcryptjs';
 import { getSafeUserOmit } from '../../shared/db-helpers/safeUserOmit';
 import { UserResponseDto } from './dto/Responses/UserResponseDto';
-import { EditUserParams } from './types';
+import { EditUserParams, ChangePasswordParams } from './types';
+import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 
 @Injectable()
 export class UserService {
@@ -21,11 +22,15 @@ export class UserService {
     }
   }
 
+  async getHashedPassword(password: string) {
+    return bcrypt.hash(password, 10);
+  }
+
   async createUser(dto: CreateUserDto) {
     const { email, password, name, lastname, createProfileFields } = dto;
     await this.throwIfUserAlreadyExist(dto.email);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await this.getHashedPassword(password);
 
     const profile = await this.prismaService.profile.findUnique({
       where: {
@@ -110,5 +115,32 @@ export class UserService {
     });
 
     return { user: new UserResponseDto({ user: updatedUser }) };
+  }
+
+  async changePassword({ dto, user }: ChangePasswordParams) {
+    const dbUser = await this.prismaService.user.findUnique({
+      where: { id: user.id }
+    });
+
+    if (!dbUser) {
+      throw new NotFoundException({ message: 'User not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(dto.oldPassword, dbUser.password);
+
+    if (!isPasswordValid) {
+      throw new BadRequestException({ password: 'Wrong password' });
+    }
+
+    const hashedPassword = await this.getHashedPassword(dto.newPassword);
+
+    await this.prismaService.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword
+      }
+    });
+
+    return new SuccessMessageDto();
   }
 }

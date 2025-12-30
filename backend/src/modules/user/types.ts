@@ -1,4 +1,5 @@
 import { UserToken } from '../auth/types';
+import { ChangePasswordDto } from './dto/Requests/ChangePasswordDto';
 import { EditUserDto } from './dto/Requests/EditUserDto';
 
 export type UserFromDb = {
@@ -13,5 +14,10 @@ export type UserFromDb = {
 
 export interface EditUserParams {
   dto: EditUserDto;
+  user: UserToken;
+}
+
+export interface ChangePasswordParams {
+  dto: ChangePasswordDto;
   user: UserToken;
 }
