@@ -1,5 +1,8 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { UserToken } from '../auth/types';
+import { UserFromDb } from 'src/modules/user/types';
+import { ProfileResponseDto } from './dto/Responses/ProfileResponseDto';
 
 @Injectable()
 export class ProfileService {
@@ -31,5 +34,25 @@ export class ProfileService {
     });
 
     return !!profile;
+  }
+
+  async getMyProfile(user: UserToken) {
+    const profileFromDb = await this.prismaService.profile.findUnique({
+      where: { id: user.profileId }
+    });
+
+    if (!profileFromDb) {
+      throw new NotFoundException({ message: 'Profile not found.' });
+    }
+
+    const userFromDb = await this.prismaService.user.findUnique({
+      where: { id: user.id }
+    });
+
+    if (!userFromDb) {
+      throw new NotFoundException({ message: 'User not found.' });
+    }
+
+    return new ProfileResponseDto({ profileFromDb, user: userFromDb });
   }
 }

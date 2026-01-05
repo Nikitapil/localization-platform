@@ -85,7 +85,7 @@ const onLogout = async () => {
 
                 <li>
                   <NavListLink
-                    :to="{ name: RouteNames.PROFILE }"
+                    :to="{ name: RouteNames.PROFILE_CREDENTIALS }"
                     text="Profile"
                   >
                     <template #icon>

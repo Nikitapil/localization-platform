@@ -6,6 +6,8 @@ import AccountPage from '@/modules/account/pages/AccountPage.vue';
 import UserCredentials from '@/modules/account/pages/UserCredentials/UserCredentials.vue';
 import ChangePassword from '@/modules/account/pages/ChangePassword/ChangePassword.vue';
 import ProfilePage from '@/modules/profile/pages/ProfilePage.vue';
+import ProfileCredentials from '@/modules/profile/pages/ProfileCredentials/ProfileCredentials.vue';
+import ProfileUsers from '@/modules/profile/pages/ProfileUsers/ProfileUsers.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,7 +42,19 @@ const router = createRouter({
     {
       name: RouteNames.PROFILE,
       path: '/profile',
-      component: ProfilePage
+      component: ProfilePage,
+      children: [
+        {
+          name: RouteNames.PROFILE_CREDENTIALS,
+          path: '',
+          component: ProfileCredentials
+        },
+        {
+          name: RouteNames.PROFILE_USERS,
+          path: 'users',
+          component: ProfileUsers
+        }
+      ]
     }
   ]
 });
