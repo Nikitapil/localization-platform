@@ -11,7 +11,12 @@
  */
 
 import { useApi } from "../utils/useApi";
-import type { EditUserDto, ResponseWithUserDto } from "./data-contracts";
+import type {
+  ChangePasswordDto,
+  EditUserDto,
+  ResponseWithUserDto,
+  SuccessMessageDto,
+} from "./data-contracts";
 import { ContentType, HttpClient, type RequestParams } from "./http-client";
 
 export class UserApi<
@@ -34,6 +39,23 @@ export class UserApi<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags User
+   * @name ChangePassword
+   * @summary Change password
+   * @request PUT:/api/user/password
+   */
+  changePassword = (data: ChangePasswordDto, params: RequestParams = {}) =>
+    this.request<SuccessMessageDto, any>({
+      path: `/api/user/password`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
 }
 
 const instance = new UserApi();
@@ -41,5 +63,6 @@ const instance = new UserApi();
 export const useUserApi = () => {
   return {
     editUser: useApi(instance.editUser),
+    changePassword: useApi(instance.changePassword),
   };
 };

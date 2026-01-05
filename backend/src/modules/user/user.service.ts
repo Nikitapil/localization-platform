@@ -125,11 +125,11 @@ export class UserService {
     if (!dbUser) {
       throw new NotFoundException({ message: 'User not found' });
     }
-
+   console.log(dto)
     const isPasswordValid = await bcrypt.compare(dto.oldPassword, dbUser.password);
 
     if (!isPasswordValid) {
-      throw new BadRequestException({ password: 'Wrong password' });
+      throw new BadRequestException({ oldPassword: 'Wrong password' });
     }
 
     const hashedPassword = await this.getHashedPassword(dto.newPassword);

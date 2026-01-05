@@ -33,6 +33,19 @@ export interface ResponseWithUserDto {
   user: UserResponseDto;
 }
 
+export interface ChangePasswordDto {
+  /** user old password */
+  oldPassword: string;
+  /** user new password */
+  newPassword: string;
+  /** repeated password */
+  repeatedPassword: string;
+}
+
+export interface SuccessMessageDto {
+  message: string;
+}
+
 export interface MessageDto {
   message: string;
 }
@@ -65,10 +78,6 @@ export interface LoginDto {
 export interface AuthUserResponse {
   user: UserResponseDto;
   accessToken: string;
-}
-
-export interface SuccessMessageDto {
-  message: string;
 }
 
 export interface AddLangDto {

@@ -33,7 +33,7 @@ export class UserController {
     type: SuccessMessageDto
   })
   @AuthRequired()
-  @Put()
+  @Put('/password')
   changePassword(@Body() dto: ChangePasswordDto, @User() user: UserToken): Promise<SuccessMessageDto> {
     return this.userService.changePassword({ dto, user });
   }
