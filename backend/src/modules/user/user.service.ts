@@ -125,7 +125,7 @@ export class UserService {
     if (!dbUser) {
       throw new NotFoundException({ message: 'User not found' });
     }
-   console.log(dto)
+
     const isPasswordValid = await bcrypt.compare(dto.oldPassword, dbUser.password);
 
     if (!isPasswordValid) {

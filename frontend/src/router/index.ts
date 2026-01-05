@@ -31,7 +31,7 @@ const router = createRouter({
         },
         {
           name: RouteNames.CHANGE_PASSWORD,
-          path: '',
+          path: 'change-password',
           component: ChangePassword
         }
       ]
