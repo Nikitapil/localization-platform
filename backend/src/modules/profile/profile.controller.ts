@@ -1,10 +1,11 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProfileService } from './profile.service';
 import { ProfileResponseDto } from './dto/Responses/ProfileResponseDto';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { User } from '../auth/decorators/User.decorator';
 import type { UserToken } from '../auth/types';
+import { EditProfileDto } from './dto/Requests/EditProfileDto';
 
 @ApiTags('Profile')
 @Controller('profile')
@@ -32,5 +33,17 @@ export class ProfileController {
   @Get()
   getMyProfile(@User() user: UserToken): Promise<ProfileResponseDto> {
     return this.profileService.getMyProfile(user);
+  }
+
+  @ApiOperation({ summary: 'Edit my profile', operationId: 'editProfile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile edited',
+    type: ProfileResponseDto
+  })
+  @AuthRequired()
+  @Put()
+  editProfile(@Body() dto: EditProfileDto, @User() user: UserToken): Promise<ProfileResponseDto> {
+    return this.profileService.editProfile({ user, dto });
   }
 }

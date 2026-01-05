@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProfileFromDb } from '../../types';
 import { UserFromDb } from 'src/modules/user/types';
-import { UserRole } from 'generated/prisma';
+import { getCanEditProfile } from '../../utils/permissions';
 
 interface ProfileResponseDtoParams {
   profileFromDb: ProfileFromDb;
@@ -29,6 +29,6 @@ export class ProfileResponseDto {
     this.id = profileFromDb.id;
     this.createdAt = profileFromDb.createdAt;
     this.updatedAt = profileFromDb.updatedAt;
-    this.canEdit = user.profileId === profileFromDb.id && user.role === UserRole.MAIN;
+    this.canEdit = getCanEditProfile({ user, profile: profileFromDb });
   }
 }

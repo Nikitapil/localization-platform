@@ -1,8 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserToken } from '../auth/types';
-import { UserFromDb } from 'src/modules/user/types';
 import { ProfileResponseDto } from './dto/Responses/ProfileResponseDto';
+import { EditProfileParams } from './types';
 
 @Injectable()
 export class ProfileService {
@@ -54,5 +54,30 @@ export class ProfileService {
     }
 
     return new ProfileResponseDto({ profileFromDb, user: userFromDb });
+  }
+
+  async editProfile({ dto, user }: EditProfileParams) {
+    const profile = await this.getMyProfile(user);
+
+    if (!profile.canEdit) {
+      throw new ForbiddenException({ message: 'No access to edit profile' });
+    }
+
+    const updatedProfile = await this.prismaService.profile.update({
+      where: { id: profile.id },
+      data: {
+        name: dto.name
+      }
+    });
+
+    const userFromDb = await this.prismaService.user.findUnique({
+      where: { id: user.id }
+    });
+
+    if (!userFromDb) {
+      throw new NotFoundException({ message: 'User Not found' });
+    }
+
+    return new ProfileResponseDto({ profileFromDb: updatedProfile, user: userFromDb });
   }
 }
