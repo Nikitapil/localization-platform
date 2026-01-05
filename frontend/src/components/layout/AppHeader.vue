@@ -85,7 +85,7 @@ const onLogout = async () => {
 
                 <li>
                   <NavListLink
-                    to="not-implemented"
+                    :to="{ name: RouteNames.PROFILE }"
                     text="Profile"
                   >
                     <template #icon>

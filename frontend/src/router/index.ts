@@ -5,6 +5,7 @@ import { RouteNames } from './routes';
 import AccountPage from '@/modules/account/pages/AccountPage.vue';
 import UserCredentials from '@/modules/account/pages/UserCredentials/UserCredentials.vue';
 import ChangePassword from '@/modules/account/pages/ChangePassword/ChangePassword.vue';
+import ProfilePage from '@/modules/profile/pages/ProfilePage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,11 @@ const router = createRouter({
           component: ChangePassword
         }
       ]
+    },
+    {
+      name: RouteNames.PROFILE,
+      path: '/profile',
+      component: ProfilePage
     }
   ]
 });
