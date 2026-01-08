@@ -63,6 +63,10 @@ export class ProfileService {
       throw new ForbiddenException({ message: 'No access to edit profile' });
     }
 
+    if (dto.name !== profile.name) {
+      await this.throwIfProfileAlreadyExist(dto.name);
+    }
+
     const updatedProfile = await this.prismaService.profile.update({
       where: { id: profile.id },
       data: {

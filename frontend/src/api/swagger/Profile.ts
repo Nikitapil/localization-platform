@@ -11,8 +11,12 @@
  */
 
 import { useApi } from "../utils/useApi";
-import type { GetIsProfileExistParams } from "./data-contracts";
-import { HttpClient, type RequestParams } from "./http-client";
+import type {
+  EditProfileDto,
+  GetIsProfileExistParams,
+  ProfileResponseDto,
+} from "./data-contracts";
+import { ContentType, HttpClient, type RequestParams } from "./http-client";
 
 export class ProfileApi<
   SecurityDataType = unknown,
@@ -35,6 +39,38 @@ export class ProfileApi<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags Profile
+   * @name GetMyProfile
+   * @summary Get my profile
+   * @request GET:/api/profile
+   */
+  getMyProfile = (params: RequestParams = {}) =>
+    this.request<ProfileResponseDto, any>({
+      path: `/api/profile`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Profile
+   * @name EditProfile
+   * @summary Edit my profile
+   * @request PUT:/api/profile
+   */
+  editProfile = (data: EditProfileDto, params: RequestParams = {}) =>
+    this.request<ProfileResponseDto, any>({
+      path: `/api/profile`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
 }
 
 const instance = new ProfileApi();
@@ -42,5 +78,7 @@ const instance = new ProfileApi();
 export const useProfileApi = () => {
   return {
     getIsProfileExist: useApi(instance.getIsProfileExist),
+    getMyProfile: useApi(instance.getMyProfile),
+    editProfile: useApi(instance.editProfile),
   };
 };

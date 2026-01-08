@@ -15,6 +15,8 @@ const props = defineProps<Props>();
     </template>
   </SideNav>
   <div class="ml-16 sm:ml-64">
-    <RouterView />
+    <slot name="page-body">
+      <RouterView />
+    </slot>
   </div>
 </template>

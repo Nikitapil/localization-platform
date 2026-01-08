@@ -5,6 +5,13 @@ import PageWithSideNav from '@/components/layout/PageWithSideNav.vue';
 import AuthGuard from '@/shared/auth/components/AuthGuard.vue';
 import Profile from '@/components/icons/Profile.vue';
 import UserCircle from '@/components/icons/UserCircle.vue';
+import { useMyProfile } from '../useMyProfile';
+import Spinner from '@/components/loaders/Spinner.vue';
+
+const { getMyProfile, isProfileLoading, isEditProfileInProgress, editProfileErrors, profile, editProfile } =
+  useMyProfile();
+
+getMyProfile();
 </script>
 
 <template>
@@ -32,6 +39,25 @@ import UserCircle from '@/components/icons/UserCircle.vue';
             </NavListLink>
           </li>
         </ul>
+      </template>
+
+      <template #page-body>
+        <div>
+          <div
+            v-if="isProfileLoading"
+            class="h-screen w-full flex justify-center items-center"
+          >
+            <Spinner />
+          </div>
+
+          <RouterView
+            v-else-if="profile"
+            :profile="profile"
+            :isEditProfileInProgress="isEditProfileInProgress"
+            :editProfileErrors="editProfileErrors"
+            @editProfile="editProfile"
+          />
+        </div>
       </template>
     </PageWithSideNav>
   </AuthGuard>

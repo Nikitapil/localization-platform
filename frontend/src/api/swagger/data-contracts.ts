@@ -10,6 +10,19 @@
  * ---------------------------------------------------------------
  */
 
+export interface ProfileResponseDto {
+  name: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  canEdit: boolean;
+}
+
+export interface EditProfileDto {
+  /** Profile name */
+  name: string;
+}
+
 export interface EditUserDto {
   /** user email */
   email: string;
