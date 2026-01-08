@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProfileFromDb } from '../../types';
 import { UserFromDb } from 'src/modules/user/types';
-import { getCanEditProfile } from '../../utils/permissions';
+import {getCanEditProfile, getCanEditProfileUsers} from '../../utils/permissions';
 
 interface ProfileResponseDtoParams {
   profileFromDb: ProfileFromDb;

@@ -2,6 +2,7 @@ import { UserRole } from 'generated/prisma';
 import { UserToken } from '../auth/types';
 import { ChangePasswordDto } from './dto/Requests/ChangePasswordDto';
 import { EditUserDto } from './dto/Requests/EditUserDto';
+import { GetProfileUsersDto } from './dto/Requests/GetProfileUsersDto';
 
 export type UserFromDb = {
   id: string;
@@ -21,5 +22,10 @@ export interface EditUserParams {
 
 export interface ChangePasswordParams {
   dto: ChangePasswordDto;
+  user: UserToken;
+}
+
+export interface GetProfileUsersParams {
+  dto: GetProfileUsersDto;
   user: UserToken;
 }

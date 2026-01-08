@@ -30,7 +30,7 @@ const onEditProfile = async () => {
   if (valid) {
     emit('editProfile', form.value);
   }
-}
+};
 </script>
 
 <template>

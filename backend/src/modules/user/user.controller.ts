@@ -1,4 +1,4 @@
-import { Body, Controller, Put } from '@nestjs/common';
+import { Body, Controller, Get, Put, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
@@ -8,6 +8,8 @@ import { User } from '../auth/decorators/User.decorator';
 import type { UserToken } from '../auth/types';
 import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 import { ChangePasswordDto } from './dto/Requests/ChangePasswordDto';
+import { ProfileUsersListResponseDto } from './dto/Responses/ProfileUsersListResponseDto';
+import { GetProfileUsersDto } from './dto/Requests/GetProfileUsersDto';
 
 @ApiTags('User')
 @Controller('user')
@@ -36,5 +38,17 @@ export class UserController {
   @Put('/password')
   changePassword(@Body() dto: ChangePasswordDto, @User() user: UserToken): Promise<SuccessMessageDto> {
     return this.userService.changePassword({ dto, user });
+  }
+
+  @ApiOperation({ summary: 'Get profile users', operationId: 'getProfileUsers' })
+  @ApiResponse({
+    status: 200,
+    description: 'UsersList return..',
+    type: ProfileUsersListResponseDto
+  })
+  @AuthRequired()
+  @Get('/profile-users')
+  getProfileUsers(@Query() dto: GetProfileUsersDto, @User() user: UserToken): Promise<ProfileUsersListResponseDto> {
+    return this.userService.getProfileUsers({ dto, user });
   }
 }

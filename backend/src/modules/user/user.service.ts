@@ -5,8 +5,9 @@ import { Prisma, UserRole } from 'generated/prisma';
 import bcrypt from 'bcryptjs';
 import { getSafeUserOmit } from '../../shared/db-helpers/safeUserOmit';
 import { UserResponseDto } from './dto/Responses/UserResponseDto';
-import { EditUserParams, ChangePasswordParams } from './types';
+import { EditUserParams, ChangePasswordParams, GetProfileUsersParams } from './types';
 import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
+import { ProfileUsersListResponseDto } from './dto/Responses/ProfileUsersListResponseDto';
 
 @Injectable()
 export class UserService {
@@ -143,4 +144,47 @@ export class UserService {
 
     return new SuccessMessageDto();
   }
+
+  async getProfileUsers({ dto, user }: GetProfileUsersParams) {
+    const where: Prisma.UserWhereInput = {
+      profileId: user.profileId
+    };
+
+    if (dto.waitingForConfirmed) {
+      where.confirmed = false;
+    }
+
+    if (dto.onlyConfirmed) {
+      where.confirmed = true;
+    }
+
+    if (dto.search) {
+      where.OR = [
+        { email: { contains: dto.search, mode: 'insensitive' } },
+        { name: { contains: dto.search, mode: 'insensitive' } },
+        { lastname: { contains: dto.search, mode: 'insensitive' } }
+      ];
+    }
+
+    const users = await this.prismaService.user.findMany({
+      where,
+      take: dto.limit,
+      skip: dto.offset,
+      omit: getSafeUserOmit()
+    });
+
+    const totalCount = await this.prismaService.user.count({ where });
+
+    const currentUser = await this.prismaService.user.findUnique({ where: { id: user.id }, omit: getSafeUserOmit() });
+
+    if (!currentUser) {
+      throw new NotFoundException({ message: 'Current user not found' });
+    }
+
+    return new ProfileUsersListResponseDto({ users, currentUser, totalCount });
+  }
+
+  async confirmUser() {}
+
+  async changeUserRole() {}
 }
