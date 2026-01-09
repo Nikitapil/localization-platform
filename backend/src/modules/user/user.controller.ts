@@ -10,6 +10,7 @@ import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 import { ChangePasswordDto } from './dto/Requests/ChangePasswordDto';
 import { ProfileUsersListResponseDto } from './dto/Responses/ProfileUsersListResponseDto';
 import { GetProfileUsersDto } from './dto/Requests/GetProfileUsersDto';
+import { UserConfirmationDto } from './dto/Requests/UserConfirmationDto';
 
 @ApiTags('User')
 @Controller('user')
@@ -50,5 +51,17 @@ export class UserController {
   @Get('/profile-users')
   getProfileUsers(@Query() dto: GetProfileUsersDto, @User() user: UserToken): Promise<ProfileUsersListResponseDto> {
     return this.userService.getProfileUsers({ dto, user });
+  }
+
+  @ApiOperation({ summary: 'Set User Confirmation', operationId: 'setUserConfirmation' })
+  @ApiResponse({
+    status: 200,
+    description: 'User confirmation has been setted',
+    type: SuccessMessageDto
+  })
+  @AuthRequired()
+  @Put('/confirmation')
+  setUserConfirmation(@Body() dto: UserConfirmationDto, @User() user: UserToken): Promise<SuccessMessageDto> {
+    return this.userService.setUserConfirmation({ dto, user });
   }
 }

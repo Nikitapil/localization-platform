@@ -1,13 +1,20 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from './dto/Requests/CreateUserDto';
 import { Prisma, UserRole } from 'generated/prisma';
 import bcrypt from 'bcryptjs';
 import { getSafeUserOmit } from '../../shared/db-helpers/safeUserOmit';
 import { UserResponseDto } from './dto/Responses/UserResponseDto';
-import { EditUserParams, ChangePasswordParams, GetProfileUsersParams } from './types';
+import { EditUserParams, ChangePasswordParams, GetProfileUsersParams, SetUserConfirmationParams } from './types';
 import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 import { ProfileUsersListResponseDto } from './dto/Responses/ProfileUsersListResponseDto';
+import { getCanEditUser } from './utils/permissions';
 
 @Injectable()
 export class UserService {
@@ -184,7 +191,31 @@ export class UserService {
     return new ProfileUsersListResponseDto({ users, currentUser, totalCount });
   }
 
-  async confirmUser() {}
+  async setUserConfirmation({ dto, user }: SetUserConfirmationParams) {
+    const userFromDb = await this.prismaService.user.findUnique({ where: { id: dto.userId } });
+
+    const currentUser = await this.prismaService.user.findUnique({ where: { id: user.id } });
+
+    if (!userFromDb || !currentUser) {
+      throw new NotFoundException({ message: 'User not found' });
+    }
+
+    const canEdit = getCanEditUser(userFromDb, currentUser);
+
+    if (!canEdit) {
+      throw new ForbiddenException({ message: 'You are not allowed to edit this user' });
+    }
+
+    await this.prismaService.user.update({
+      where: { id: dto.userId },
+      data: {
+        confirmed: dto.isConfirmed
+      },
+      omit: getSafeUserOmit()
+    });
+
+    return new SuccessMessageDto();
+  }
 
   async changeUserRole() {}
 }
