@@ -3,7 +3,7 @@ import { UserToken } from '../auth/types';
 import { ChangePasswordDto } from './dto/Requests/ChangePasswordDto';
 import { EditUserDto } from './dto/Requests/EditUserDto';
 import { GetProfileUsersDto } from './dto/Requests/GetProfileUsersDto';
-import { UserConfirmationDto } from './dto/Requests/UserConfirmationDto';
+import { EditProfileUserDto } from './dto/Requests/EditProfileUserDto';
 
 export type UserFromDb = {
   id: string;
@@ -31,7 +31,7 @@ export interface GetProfileUsersParams {
   user: UserToken;
 }
 
-export interface SetUserConfirmationParams {
-  dto: UserConfirmationDto;
+export interface EditProfileUserParams {
+  dto: EditProfileUserDto;
   user: UserToken;
 }

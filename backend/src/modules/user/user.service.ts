@@ -11,10 +11,11 @@ import { Prisma, UserRole } from 'generated/prisma';
 import bcrypt from 'bcryptjs';
 import { getSafeUserOmit } from '../../shared/db-helpers/safeUserOmit';
 import { UserResponseDto } from './dto/Responses/UserResponseDto';
-import { EditUserParams, ChangePasswordParams, GetProfileUsersParams, SetUserConfirmationParams } from './types';
+import { EditUserParams, ChangePasswordParams, GetProfileUsersParams, EditProfileUserParams } from './types';
 import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 import { ProfileUsersListResponseDto } from './dto/Responses/ProfileUsersListResponseDto';
 import { getCanEditUser } from './utils/permissions';
+import { ProfileUserResponseDto } from './dto/Responses/ProfileUserResponseDto';
 
 @Injectable()
 export class UserService {
@@ -191,7 +192,7 @@ export class UserService {
     return new ProfileUsersListResponseDto({ users, currentUser, totalCount });
   }
 
-  async setUserConfirmation({ dto, user }: SetUserConfirmationParams) {
+  async editProfileUser({ dto, user }: EditProfileUserParams) {
     const userFromDb = await this.prismaService.user.findUnique({ where: { id: dto.userId } });
 
     const currentUser = await this.prismaService.user.findUnique({ where: { id: user.id } });
@@ -206,16 +207,15 @@ export class UserService {
       throw new ForbiddenException({ message: 'You are not allowed to edit this user' });
     }
 
-    await this.prismaService.user.update({
+    const updatedUser = await this.prismaService.user.update({
       where: { id: dto.userId },
       data: {
-        confirmed: dto.isConfirmed
+        confirmed: dto.isConfirmed,
+        role: dto.role
       },
       omit: getSafeUserOmit()
     });
 
-    return new SuccessMessageDto();
+    return new ProfileUserResponseDto({ user: updatedUser, currentUser });
   }
-
-  async changeUserRole() {}
 }

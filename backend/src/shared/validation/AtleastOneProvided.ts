@@ -1,9 +1,9 @@
 import { ValidationOptions, ValidationArguments, registerDecorator } from 'class-validator';
 
-export function IsOneOfProvided<T extends object>(fields: string[], validationOptions?: ValidationOptions) {
+export function AtleastOneProvided<T extends object>(fields: string[], validationOptions?: ValidationOptions) {
   return function (object: T, propertyName: string) {
     registerDecorator({
-      name: 'IsOneOfProvided',
+      name: 'AtleastOneProvided',
       target: object.constructor,
       propertyName: propertyName,
       constraints: [fields],
@@ -20,11 +20,8 @@ export function IsOneOfProvided<T extends object>(fields: string[], validationOp
                 fieldValue !== '' &&
                 !(typeof fieldValue === 'object' && fieldValue && Object.keys(fieldValue as object).length === 0)
               );
-            }).length === 1
+            }).length > 0
           );
-        },
-        defaultMessage(): string {
-          return `Only one of the following fields must be provided: ${fields.join(', ')}`;
         }
       }
     });

@@ -10,7 +10,8 @@ import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 import { ChangePasswordDto } from './dto/Requests/ChangePasswordDto';
 import { ProfileUsersListResponseDto } from './dto/Responses/ProfileUsersListResponseDto';
 import { GetProfileUsersDto } from './dto/Requests/GetProfileUsersDto';
-import { UserConfirmationDto } from './dto/Requests/UserConfirmationDto';
+import { ProfileUserResponseDto } from './dto/Responses/ProfileUserResponseDto';
+import { EditProfileUserDto } from './dto/Requests/EditProfileUserDto';
 
 @ApiTags('User')
 @Controller('user')
@@ -53,15 +54,15 @@ export class UserController {
     return this.userService.getProfileUsers({ dto, user });
   }
 
-  @ApiOperation({ summary: 'Set User Confirmation', operationId: 'setUserConfirmation' })
+  @ApiOperation({ summary: 'Edit profile user information', operationId: 'editProfileUser' })
   @ApiResponse({
     status: 200,
-    description: 'User confirmation has been setted',
-    type: SuccessMessageDto
+    description: 'User editted successfully',
+    type: ProfileUserResponseDto
   })
   @AuthRequired()
-  @Put('/confirmation')
-  setUserConfirmation(@Body() dto: UserConfirmationDto, @User() user: UserToken): Promise<SuccessMessageDto> {
-    return this.userService.setUserConfirmation({ dto, user });
+  @Put('/edit-profile-user')
+  editProfileUser(@Body() dto: EditProfileUserDto, @User() user: UserToken): Promise<ProfileUserResponseDto> {
+    return this.userService.editProfileUser({ dto, user });
   }
 }
