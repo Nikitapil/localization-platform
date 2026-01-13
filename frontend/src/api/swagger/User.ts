@@ -13,7 +13,11 @@
 import { useApi } from "../utils/useApi";
 import type {
   ChangePasswordDto,
+  EditProfileUserDto,
   EditUserDto,
+  GetProfileUsersParams,
+  ProfileUserResponseDto,
+  ProfileUsersListResponseDto,
   ResponseWithUserDto,
   SuccessMessageDto,
 } from "./data-contracts";
@@ -56,6 +60,42 @@ export class UserApi<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags User
+   * @name GetProfileUsers
+   * @summary Get profile users
+   * @request GET:/api/user/profile-users
+   */
+  getProfileUsers = (
+    query: GetProfileUsersParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<ProfileUsersListResponseDto, any>({
+      path: `/api/user/profile-users`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags User
+   * @name EditProfileUser
+   * @summary Edit profile user information
+   * @request PUT:/api/user/edit-profile-user
+   */
+  editProfileUser = (data: EditProfileUserDto, params: RequestParams = {}) =>
+    this.request<ProfileUserResponseDto, any>({
+      path: `/api/user/edit-profile-user`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
 }
 
 const instance = new UserApi();
@@ -64,5 +104,7 @@ export const useUserApi = () => {
   return {
     editUser: useApi(instance.editUser),
     changePassword: useApi(instance.changePassword),
+    getProfileUsers: useApi(instance.getProfileUsers),
+    editProfileUser: useApi(instance.editProfileUser),
   };
 };

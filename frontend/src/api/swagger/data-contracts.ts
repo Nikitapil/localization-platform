@@ -10,6 +10,11 @@
  * ---------------------------------------------------------------
  */
 
+export enum UserRole {
+  STANDART = "STANDART",
+  MAIN = "MAIN",
+}
+
 export interface ProfileResponseDto {
   name: string;
   id: string;
@@ -40,6 +45,7 @@ export interface UserResponseDto {
   profileId: string;
   createdAt: string;
   updatedAt: string;
+  role: UserRole;
 }
 
 export interface ResponseWithUserDto {
@@ -57,6 +63,22 @@ export interface ChangePasswordDto {
 
 export interface SuccessMessageDto {
   message: string;
+}
+
+export interface ProfileUserResponseDto {
+  user: UserResponseDto;
+  canEditUser: boolean;
+}
+
+export interface ProfileUsersListResponseDto {
+  users: ProfileUserResponseDto[];
+  totalCount: number;
+}
+
+export interface EditProfileUserDto {
+  userId: string;
+  isConfirmed: boolean;
+  role: UserRole;
 }
 
 export interface MessageDto {
@@ -157,6 +179,14 @@ export interface CreateTranslationDto {
 
 export interface GetIsProfileExistParams {
   name: string;
+}
+
+export interface GetProfileUsersParams {
+  limit: number;
+  offset: number;
+  waitingForConfirmed?: boolean;
+  onlyConfirmed?: boolean;
+  search?: string;
 }
 
 export interface GetLangsParams {
