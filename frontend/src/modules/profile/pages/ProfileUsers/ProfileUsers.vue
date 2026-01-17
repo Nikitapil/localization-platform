@@ -3,11 +3,16 @@ import List from '@/components/List.vue';
 import { useProfileUsersList } from './useProfileUsersList';
 import { onMounted } from 'vue';
 import ProfileUser from '../../components/ProfileUser.vue';
+import type { UserRole } from '@/api/swagger/data-contracts';
 
 const { usersList, usersEditLoading, loadProfileUsers, editProfileUser } = useProfileUsersList();
 
 const onChangeConfirmation = async ({ id, confirmed }: { id: string; confirmed: boolean }) => {
   await editProfileUser({ userId: id, isConfirmed: confirmed });
+};
+
+const onChangeUserRole = async ({ id, role }: { id: string; role: UserRole }) => {
+  await editProfileUser({ userId: id, role });
 };
 
 onMounted(() => {
@@ -29,6 +34,7 @@ onMounted(() => {
           :key="item.id"
           :isLoading="usersEditLoading[item.id] || false"
           @changeConfirmation="onChangeConfirmation"
+          @changeRole="onChangeUserRole"
         />
       </template>
     </List>
