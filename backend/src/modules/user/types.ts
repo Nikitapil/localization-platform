@@ -14,6 +14,7 @@ export type UserFromDb = {
   createdAt: Date;
   updatedAt: Date;
   role: UserRole;
+  confirmed: boolean;
 };
 
 export interface EditUserParams {

@@ -15,8 +15,12 @@ export class ProfileUserResponseDto {
   @ApiProperty({ type: Boolean })
   canEditUser: boolean;
 
+  @ApiProperty({ type: Boolean })
+  confirmed: boolean;
+
   constructor({ user, currentUser }: ProfileUserResponseDtoParams) {
     this.user = new UserResponseDto({ user });
     this.canEditUser = getCanEditUser(user, currentUser);
+    this.confirmed = user.confirmed;
   }
 }

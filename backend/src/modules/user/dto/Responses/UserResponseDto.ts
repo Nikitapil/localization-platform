@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserFromDb } from '../../types';
+import { UserRole } from 'generated/prisma';
 
 interface IUserResponseDtoParams {
   user: UserFromDb;
@@ -27,6 +28,9 @@ export class UserResponseDto {
   @ApiProperty({ type: String })
   updatedAt: Date;
 
+  @ApiProperty({ type: String, enum: UserRole, enumName: 'UserRole' })
+  role: UserRole;
+
   constructor({ user }: IUserResponseDtoParams) {
     this.id = user.id;
     this.email = user.email;
@@ -35,5 +39,6 @@ export class UserResponseDto {
     this.profileId = user.profileId;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
+    this.role = user.role;
   }
 }

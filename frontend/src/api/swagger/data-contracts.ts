@@ -68,6 +68,7 @@ export interface SuccessMessageDto {
 export interface ProfileUserResponseDto {
   user: UserResponseDto;
   canEditUser: boolean;
+  confirmed: boolean;
 }
 
 export interface ProfileUsersListResponseDto {
@@ -77,8 +78,8 @@ export interface ProfileUsersListResponseDto {
 
 export interface EditProfileUserDto {
   userId: string;
-  isConfirmed: boolean;
-  role: UserRole;
+  isConfirmed?: boolean;
+  role?: UserRole;
 }
 
 export interface MessageDto {

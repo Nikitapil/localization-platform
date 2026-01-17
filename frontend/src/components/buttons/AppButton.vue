@@ -5,7 +5,7 @@ import { computed, type ButtonHTMLAttributes } from 'vue';
 interface Props {
   type?: ButtonHTMLAttributes['type'];
   text?: string;
-  appearence?: 'primary' | 'transparent';
+  appearence?: 'primary' | 'transparent' | 'danger';
   loading?: boolean;
   disabled?: boolean;
 }
@@ -27,12 +27,16 @@ const className = computed(() => {
     classes += ' text-black bg-transparent hover:bg-neutral-secondary-medium focus:ring-neutral-tertiary shadow-none!';
   }
 
+  if (props.appearence === 'danger' && !props.disabled) {
+    classes += ' text-white bg-danger hover:bg-danger-strong focus:ring-danger-medium shadow-xs!';
+  }
+
   if (props.disabled) {
     classes += ' text-fg-disabled bg-disabled';
   }
 
   if (props.loading || props.disabled) {
-    classes += ' pointer-events-none';
+    classes += ' pointer-events-none cursor-not-allowed';
   }
 
   return classes;

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsString, IsEnum, IsOptional } from 'class-validator';
 import { UserRole } from 'generated/prisma';
 import { AtleastOneProvided } from '../../../../shared/validation/AtleastOneProvided';
@@ -9,12 +9,12 @@ export class EditProfileUserDto {
   @IsNotEmpty()
   userId: string;
 
-  @ApiProperty({ type: Boolean })
+  @ApiPropertyOptional({ type: Boolean })
   @IsBoolean()
   @IsOptional()
   isConfirmed?: boolean;
 
-  @ApiProperty({ type: String, enum: UserRole, enumName: 'UserRole' })
+  @ApiPropertyOptional({ type: String, enum: UserRole, enumName: 'UserRole' })
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;
