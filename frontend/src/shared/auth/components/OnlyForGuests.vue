@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue';
-import { useRouter } from 'vue-router';
 import { useAuthStore } from '../AuthStore';
 import { useRouting } from '@/router/useRouting';
 

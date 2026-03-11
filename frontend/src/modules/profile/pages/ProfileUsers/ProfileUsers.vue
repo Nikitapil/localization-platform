@@ -4,8 +4,9 @@ import { useProfileUsersList } from './useProfileUsersList';
 import { onMounted } from 'vue';
 import ProfileUser from '../../components/ProfileUser.vue';
 import type { UserRole } from '@/api/swagger/data-contracts';
+import LoadMoreTrigger from '@/components/LoadMoreTrigger.vue';
 
-const { usersList, usersEditLoading, loadProfileUsers, editProfileUser } = useProfileUsersList();
+const { usersList, usersEditLoading, hasMoreUsers, loadProfileUsers, editProfileUser } = useProfileUsersList();
 
 const onChangeConfirmation = async ({ id, confirmed }: { id: string; confirmed: boolean }) => {
   await editProfileUser({ userId: id, isConfirmed: confirmed });
@@ -13,6 +14,10 @@ const onChangeConfirmation = async ({ id, confirmed }: { id: string; confirmed: 
 
 const onChangeUserRole = async ({ id, role }: { id: string; role: UserRole }) => {
   await editProfileUser({ userId: id, role });
+};
+
+const loadMoreUsers = async () => {
+  await loadProfileUsers({ offset: usersList.value.length, limit: 10 });
 };
 
 onMounted(() => {
@@ -38,5 +43,9 @@ onMounted(() => {
         />
       </template>
     </List>
+    <LoadMoreTrigger
+      v-if="hasMoreUsers"
+      @scrolled="loadMoreUsers"
+    />
   </div>
 </template>
