@@ -5,6 +5,7 @@ import { onMounted } from 'vue';
 import ProfileUser from '../../components/ProfileUser.vue';
 import type { UserRole } from '@/api/swagger/data-contracts';
 import LoadMoreTrigger from '@/components/LoadMoreTrigger.vue';
+import ContentSwitcher from '@/components/ContentSwitcher.vue';
 
 const { usersList, usersEditLoading, hasMoreUsers, loadProfileUsers, editProfileUser } = useProfileUsersList();
 
@@ -28,6 +29,12 @@ onMounted(() => {
 <template>
   <div>
     <h2 class="text-2xl font-bold text-heading mb-4">Profile users</h2>
+    <ContentSwitcher
+      :options="[
+        { name: 'HHello', value: 'world' },
+        { name: 'why', value: 'not' }
+      ]"
+    />
     <List
       v-if="usersList.length"
       :items="usersList"
