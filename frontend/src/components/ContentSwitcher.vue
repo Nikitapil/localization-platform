@@ -7,7 +7,7 @@ interface ContentSwitcherOption {
 }
 
 const props = defineProps<{
-  options: ContentSwitcherOption[];
+  options: readonly ContentSwitcherOption[];
 }>();
 
 const clickHandler = (option: ContentSwitcherOption) => {
