@@ -8,6 +8,7 @@ import ChangePassword from '@/modules/account/pages/ChangePassword/ChangePasswor
 import ProfilePage from '@/modules/profile/pages/ProfilePage.vue';
 import ProfileCredentials from '@/modules/profile/pages/ProfileCredentials/ProfileCredentials.vue';
 import ProfileUsers from '@/modules/profile/pages/ProfileUsers/ProfileUsers.vue';
+import Langs from '@/modules/profile/pages/Langs/Langs.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,6 +54,11 @@ const router = createRouter({
           name: RouteNames.PROFILE_USERS,
           path: 'users',
           component: ProfileUsers
+        },
+        {
+          name: RouteNames.LANGS,
+          path: 'langs',
+          component: Langs
         }
       ]
     }

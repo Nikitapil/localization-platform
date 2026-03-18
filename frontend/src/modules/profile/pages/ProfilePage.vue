@@ -7,6 +7,7 @@ import Profile from '@/components/icons/Profile.vue';
 import UserCircle from '@/components/icons/UserCircle.vue';
 import { useMyProfile } from '../useMyProfile';
 import Spinner from '@/components/loaders/Spinner.vue';
+import Language from '@/components/icons/Language.vue';
 
 const { getMyProfile, isProfileLoading, isEditProfileInProgress, editProfileErrors, profile, editProfile } =
   useMyProfile();
@@ -35,6 +36,15 @@ getMyProfile();
             >
               <template #icon>
                 <UserCircle />
+              </template>
+            </NavListLink>
+
+            <NavListLink
+              text="Languages"
+              :to="{ name: RouteNames.LANGS }"
+            >
+              <template #icon>
+                <Language />
               </template>
             </NavListLink>
           </li>

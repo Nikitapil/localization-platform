@@ -6,5 +6,6 @@ export enum RouteNames {
   USER_CREDENTIALS = 'user_credentials',
   PROFILE_CREDENTIALS = 'profile_credentials',
   PROFILE_USERS = 'profile_users',
+  LANGS = 'lang',
   CHANGE_PASSWORD = 'change_password'
 }
