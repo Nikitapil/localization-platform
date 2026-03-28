@@ -4,7 +4,7 @@ import { useLangApi } from '@/api/swagger/Lang';
 import { toast } from 'vue3-toastify';
 
 export const useLangs = () => {
-  const { getLangs, addLang } = useLangApi();
+  const { getLangs, addLang, deleteLang } = useLangApi();
 
   const langs = ref<LangResponseDto[]>([]);
   const totalLangsCount = ref<number>(0);
@@ -12,11 +12,12 @@ export const useLangs = () => {
   const isLoadMoreLoading = ref(false);
 
   const { isLoading: isAddLangInProgress, call: addLangApi } = addLang;
+  const { isLoading: isDeleteLangInProgress, call: deleteLangApi } = deleteLang;
 
   const hasMoreLangs = computed(() => langs.value.length < totalLangsCount.value);
 
-  const loadLangs = async (offset: number) => {
-    const { data } = await getLangs.call({ limit: 10, offset });
+  const loadLangs = async (offset: number, limit = 10) => {
+    const { data } = await getLangs.call({ limit, offset });
     if (!data) {
       return;
     }
@@ -46,6 +47,11 @@ export const useLangs = () => {
     }
   };
 
+  const deleteLangById = async (id: string) => {
+    await deleteLangApi({ id });
+    await loadLangs(0, langs.value.length);
+  };
+
   const init = async () => {
     isInitialLoading.value = true;
     await loadLangs(0);
@@ -58,8 +64,10 @@ export const useLangs = () => {
     isInitialLoading,
     isLoadMoreLoading,
     isAddLangInProgress,
+    isDeleteLangInProgress,
     init,
     loadMoreLangs,
-    addNewLang
+    addNewLang,
+    deleteLangById
   };
 };
