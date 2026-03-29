@@ -14,14 +14,32 @@ import { useModal } from '@/components/modals/utils';
 import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 import type { LangResponseDto } from '@/api/swagger/data-contracts';
 
-const { isInitialLoading, isAddLangInProgress, langs, init, addNewLang, deleteLangById } = useLangs();
+const {
+  isInitialLoading,
+  isAddLangInProgress,
+  isEditLangInProgress,
+  langs,
+  init,
+  addNewLang,
+  editLangById,
+  deleteLangById
+} = useLangs();
 
-const langFormModalController = useModal();
+const langFormModalController = useModal<{ lang?: LangResponseDto }>();
 const deleteLangModal = useModal<{ id: string }>();
 
-const onAddLang = async (name: string) => {
-  await addNewLang(name);
+const onSaveLang = async (name: string) => {
+  if (langFormModalController.payload.value?.lang) {
+    await editLangById({ id: langFormModalController.payload.value?.lang.id, name });
+  } else {
+    await addNewLang(name);
+  }
+
   langFormModalController.close();
+};
+
+const onClickEditLang = (lang: LangResponseDto) => {
+  langFormModalController.open({ lang });
 };
 
 const onClickDeleteLang = (lang: LangResponseDto) => {
@@ -76,7 +94,10 @@ onMounted(init);
             <p class="text-sm text-body truncate">Creation date: {{ toClientDate(item.createdAt) }}</p>
           </div>
           <div class="inline-flex items-center space-x-1.5">
-            <IconButton :icon="Pen" />
+            <IconButton
+              :icon="Pen"
+              @click="onClickEditLang(item)"
+            />
             <IconButton
               :icon="TrashBin"
               class="text-red-500"
@@ -87,9 +108,10 @@ onMounted(init);
       </template>
     </List>
     <LangFormModal
+      v-if="langFormModalController.isShowed.value"
       :showableComponent="langFormModalController"
-      :isLoading="isAddLangInProgress"
-      @save="onAddLang"
+      :isLoading="isAddLangInProgress || isEditLangInProgress"
+      @save="onSaveLang"
     />
     <ConfirmModal
       :showableComponent="deleteLangModal"

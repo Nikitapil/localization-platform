@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { LangResponseDto } from '@/api/swagger/data-contracts';
 import AppButton from '@/components/buttons/AppButton.vue';
 import AppInput from '@/components/controls/AppInput.vue';
 import Modal from '@/components/modals/Modal.vue';
@@ -6,8 +7,7 @@ import type { DefaultModalProps } from '@/components/modals/types';
 import { useForm } from 'vee-validate';
 import { computed, ref } from 'vue';
 
-interface Props extends DefaultModalProps {
-  existingName?: string;
+interface Props extends DefaultModalProps<{ lang?: LangResponseDto }> {
   isLoading: boolean;
 }
 
@@ -20,9 +20,9 @@ const { validate } = useForm();
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const name = ref(props.existingName || '');
+const name = ref(props.showableComponent.payload.value?.lang?.name || '');
 
-const title = computed(() => (props.existingName ? 'Edit language' : 'Add language'));
+const title = computed(() => (props.showableComponent.payload.value?.lang?.name ? 'Edit language' : 'Add language'));
 
 const onSave = async () => {
   const { valid } = await validate();

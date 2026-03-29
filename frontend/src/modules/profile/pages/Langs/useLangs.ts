@@ -1,10 +1,10 @@
 import { computed, ref } from 'vue';
-import type { LangResponseDto } from '../../../../api/swagger/data-contracts';
+import type { EditLangDto, LangResponseDto } from '../../../../api/swagger/data-contracts';
 import { useLangApi } from '@/api/swagger/Lang';
 import { toast } from 'vue3-toastify';
 
 export const useLangs = () => {
-  const { getLangs, addLang, deleteLang } = useLangApi();
+  const { getLangs, addLang, deleteLang, editLang } = useLangApi();
 
   const langs = ref<LangResponseDto[]>([]);
   const totalLangsCount = ref<number>(0);
@@ -13,6 +13,7 @@ export const useLangs = () => {
 
   const { isLoading: isAddLangInProgress, call: addLangApi } = addLang;
   const { isLoading: isDeleteLangInProgress, call: deleteLangApi } = deleteLang;
+  const { isLoading: isEditLangInProgress, call: editLangApi } = editLang;
 
   const hasMoreLangs = computed(() => langs.value.length < totalLangsCount.value);
 
@@ -47,6 +48,18 @@ export const useLangs = () => {
     }
   };
 
+  const editLangById = async (dto: EditLangDto) => {
+    const { data, error } = await editLangApi(dto);
+
+    if (error && typeof error === 'object' && 'message' in error) {
+      toast.error(error.message);
+    }
+    if (data) {
+      const langIndex = langs.value.findIndex((l) => l.id === data.id);
+      langs.value[langIndex] = data;
+    }
+  };
+
   const deleteLangById = async (id: string) => {
     await deleteLangApi({ id });
     await loadLangs(0, langs.value.length);
@@ -65,9 +78,11 @@ export const useLangs = () => {
     isLoadMoreLoading,
     isAddLangInProgress,
     isDeleteLangInProgress,
+    isEditLangInProgress,
     init,
     loadMoreLangs,
     addNewLang,
-    deleteLangById
+    deleteLangById,
+    editLangById
   };
 };
