@@ -30,7 +30,7 @@ const form = ref({
   }
 });
 
-const confirmationModal = useModal();
+const confirmationModal = useModal<{}>();
 
 const title = computed(() => (isRegister.value ? 'Register' : 'Login'));
 const switchQuestion = computed(() => (isRegister.value ? 'Already have an account?' : "Don't have an account?"));

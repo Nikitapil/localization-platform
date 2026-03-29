@@ -1,9 +1,9 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T">
 import AppButton from '../buttons/AppButton.vue';
 import Modal from './Modal.vue';
 import type { DefaultModalProps } from './types';
 
-interface Props extends DefaultModalProps {
+interface Props extends DefaultModalProps<T> {
   loading?: boolean;
 }
 

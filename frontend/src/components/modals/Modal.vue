@@ -1,10 +1,10 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T">
 import IconButton from '../buttons/IconButton.vue';
 import Cancel from '../icons/Cancel.vue';
 import { computed } from 'vue';
 import type { DefaultModalProps } from './types';
 
-interface Props extends DefaultModalProps {}
+interface Props extends DefaultModalProps<T> {}
 
 const props = defineProps<Props>();
 
