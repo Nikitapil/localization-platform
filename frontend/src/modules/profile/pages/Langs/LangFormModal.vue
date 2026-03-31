@@ -9,10 +9,12 @@ import { computed, ref } from 'vue';
 
 interface Props extends DefaultModalProps<{ lang?: LangResponseDto }> {
   isLoading: boolean;
+  errors: Record<string, string>;
 }
 
 interface Emits {
   save: [name: string];
+  resetErrors: [];
 }
 
 const { validate } = useForm();
@@ -47,6 +49,8 @@ const onSave = async () => {
           rules="required"
           validationName="Language name"
           :disabled="props.isLoading"
+          :externalError="props.errors.name"
+          @update:modelValue="$emit('resetErrors')"
         />
 
         <AppButton

@@ -1,6 +1,10 @@
 import { ref } from 'vue';
 
-export const useShowableComponent = <T>() => {
+export interface ShowableComponentParams {
+  closeHandler?: () => void;
+}
+
+export const useShowableComponent = <T>(params?: ShowableComponentParams) => {
   const isShowed = ref(false);
   const payload = ref<T | null>();
 
@@ -12,6 +16,7 @@ export const useShowableComponent = <T>() => {
   const close = () => {
     isShowed.value = false;
     payload.value = null;
+    params?.closeHandler?.();
   };
 
   return { isShowed, open, close, payload };

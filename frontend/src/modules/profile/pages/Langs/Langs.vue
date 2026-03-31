@@ -19,13 +19,16 @@ const {
   isAddLangInProgress,
   isEditLangInProgress,
   langs,
+  saveLangErrors,
   init,
   addNewLang,
   editLangById,
-  deleteLangById
+  deleteLangById,
+  resetSaveErrors,
+  loadMoreLangs
 } = useLangs();
 
-const langFormModalController = useModal<{ lang?: LangResponseDto }>();
+const langFormModalController = useModal<{ lang?: LangResponseDto }>({ closeHandler: resetSaveErrors });
 const deleteLangModal = useModal<{ id: string }>();
 
 const onSaveLang = async (name: string) => {
@@ -35,7 +38,9 @@ const onSaveLang = async (name: string) => {
     await addNewLang(name);
   }
 
-  langFormModalController.close();
+  if (!Object.keys(saveLangErrors.value).length) {
+    langFormModalController.close();
+  }
 };
 
 const onClickEditLang = (lang: LangResponseDto) => {
@@ -111,7 +116,9 @@ onMounted(init);
       v-if="langFormModalController.isShowed.value"
       :showableComponent="langFormModalController"
       :isLoading="isAddLangInProgress || isEditLangInProgress"
+      :errors="saveLangErrors"
       @save="onSaveLang"
+      @resetErrors="resetSaveErrors"
     />
     <ConfirmModal
       :showableComponent="deleteLangModal"

@@ -10,6 +10,7 @@ export const useLangs = () => {
   const totalLangsCount = ref<number>(0);
   const isInitialLoading = ref(true);
   const isLoadMoreLoading = ref(false);
+  const saveLangErrors = ref<Record<string, string>>({});
 
   const { isLoading: isAddLangInProgress, call: addLangApi } = addLang;
   const { isLoading: isDeleteLangInProgress, call: deleteLangApi } = deleteLang;
@@ -40,8 +41,12 @@ export const useLangs = () => {
   const addNewLang = async (name: string) => {
     const { data, error } = await addLangApi({ name });
 
-    if (error && typeof error === 'object' && 'message' in error) {
-      toast.error(error.message);
+    if (error && typeof error === 'object') {
+      if ('message' in error) {
+        toast.error(error.message);
+      } else {
+        saveLangErrors.value = error as {};
+      }
     }
     if (data) {
       langs.value.unshift(data);
@@ -51,8 +56,12 @@ export const useLangs = () => {
   const editLangById = async (dto: EditLangDto) => {
     const { data, error } = await editLangApi(dto);
 
-    if (error && typeof error === 'object' && 'message' in error) {
-      toast.error(error.message);
+    if (error && typeof error === 'object') {
+      if ('message' in error) {
+        toast.error(error.message);
+      } else {
+        saveLangErrors.value = error as {};
+      }
     }
     if (data) {
       const langIndex = langs.value.findIndex((l) => l.id === data.id);
@@ -70,6 +79,8 @@ export const useLangs = () => {
     await loadLangs(0);
     isInitialLoading.value = false;
   };
+
+  const resetSaveErrors = () => (saveLangErrors.value = {});
   return {
     langs,
     totalLangsCount,
@@ -79,10 +90,12 @@ export const useLangs = () => {
     isAddLangInProgress,
     isDeleteLangInProgress,
     isEditLangInProgress,
+    saveLangErrors,
     init,
     loadMoreLangs,
     addNewLang,
     deleteLangById,
-    editLangById
+    editLangById,
+    resetSaveErrors
   };
 };
