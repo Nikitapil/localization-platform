@@ -13,6 +13,7 @@ import TrashBin from '@/components/icons/TrashBin.vue';
 import { useModal } from '@/components/modals/utils';
 import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 import type { LangResponseDto } from '@/api/swagger/data-contracts';
+import LoadMoreTrigger from '@/components/LoadMoreTrigger.vue';
 
 const {
   isInitialLoading,
@@ -20,6 +21,7 @@ const {
   isEditLangInProgress,
   langs,
   saveLangErrors,
+  hasMoreLangs,
   init,
   addNewLang,
   editLangById,
@@ -87,31 +89,37 @@ onMounted(init);
       </template>
     </EmptyState>
 
-    <List
-      v-else
-      :items="langs"
-      keyProperty="id"
-    >
-      <template #item="{ item }">
-        <div class="flex items-center gap-2">
-          <div class="flex-1 min-w-0">
-            <p class="font-medium text-heading truncate">{{ item.name }}</p>
-            <p class="text-sm text-body truncate">Creation date: {{ toClientDate(item.createdAt) }}</p>
+    <div v-else>
+      <List
+        :items="langs"
+        keyProperty="id"
+      >
+        <template #item="{ item }">
+          <div class="flex items-center gap-2">
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-heading truncate">{{ item.name }}</p>
+              <p class="text-sm text-body truncate">Creation date: {{ toClientDate(item.createdAt) }}</p>
+            </div>
+            <div class="inline-flex items-center space-x-1.5">
+              <IconButton
+                :icon="Pen"
+                @click="onClickEditLang(item)"
+              />
+              <IconButton
+                :icon="TrashBin"
+                class="text-red-500"
+                @click="onClickDeleteLang(item)"
+              />
+            </div>
           </div>
-          <div class="inline-flex items-center space-x-1.5">
-            <IconButton
-              :icon="Pen"
-              @click="onClickEditLang(item)"
-            />
-            <IconButton
-              :icon="TrashBin"
-              class="text-red-500"
-              @click="onClickDeleteLang(item)"
-            />
-          </div>
-        </div>
-      </template>
-    </List>
+        </template>
+      </List>
+      <LoadMoreTrigger
+        v-if="hasMoreLangs"
+        @scrolled="loadMoreLangs"
+      />
+    </div>
+
     <LangFormModal
       v-if="langFormModalController.isShowed.value"
       :showableComponent="langFormModalController"
