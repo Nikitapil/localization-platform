@@ -4,4 +4,4 @@ export const getTextInclude = () => ({
       lang: true
     }
   }
-})
+});

@@ -11,7 +11,7 @@ const props = defineProps<Props>();
 <template>
   <button
     type="button"
-    class="text-body cursor-pointer bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center"
+    class="text-body cursor-pointer bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 inline-flex justify-center items-center"
   >
     <component :is="props.icon" />
   </button>
