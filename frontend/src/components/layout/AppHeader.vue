@@ -95,8 +95,8 @@ const onLogout = async () => {
                 </li>
                 <li>
                   <NavListLink
-                    to="not-implemented"
-                    text="Translations"
+                    :to="{ name: RouteNames.TEXTS }"
+                    text="Texts"
                   >
                     <template #icon>
                       <Language />

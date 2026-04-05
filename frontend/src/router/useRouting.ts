@@ -12,5 +12,9 @@ export const useRouting = () => {
     router.push({ name: RouteNames.AUTH });
   };
 
-  return { goToMain, goToAuth };
+  const goToText = (textKey: string) => {
+    router.push({ name: RouteNames.TEXT, params: { key: textKey } });
+  };
+
+  return { goToMain, goToAuth, goToText };
 };

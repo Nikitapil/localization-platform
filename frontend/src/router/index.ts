@@ -9,6 +9,8 @@ import ProfilePage from '@/modules/profile/pages/ProfilePage.vue';
 import ProfileCredentials from '@/modules/profile/pages/ProfileCredentials/ProfileCredentials.vue';
 import ProfileUsers from '@/modules/profile/pages/ProfileUsers/ProfileUsers.vue';
 import Langs from '@/modules/profile/pages/Langs/Langs.vue';
+import Texts from '@/modules/texts/pages/Texts.vue';
+import Text from '@/modules/text/pages/Text.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +24,16 @@ const router = createRouter({
       name: RouteNames.AUTH,
       path: '/auth',
       component: AuthPage
+    },
+    {
+      name: RouteNames.TEXTS,
+      path: '/texts',
+      component: Texts
+    },
+    {
+      name: RouteNames.TEXT,
+      path: '/text/:key',
+      component: Text
     },
     {
       name: RouteNames.ACCOUNT,

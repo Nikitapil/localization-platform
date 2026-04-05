@@ -4,7 +4,7 @@ import { computed, type ButtonHTMLAttributes } from 'vue';
 
 interface Props {
   type?: ButtonHTMLAttributes['type'];
-  text?: string;
+  text?: string | number;
   appearence?: 'primary' | 'transparent' | 'danger';
   loading?: boolean;
   disabled?: boolean;
