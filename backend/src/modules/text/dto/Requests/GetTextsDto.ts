@@ -6,5 +6,10 @@ export class GetTextsDto extends PaginationDto {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsOptional()
-  searchString?: string;
+  searchStringBykey?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsString()
+  @IsOptional()
+  searchStringByTranslation?: string;
 }

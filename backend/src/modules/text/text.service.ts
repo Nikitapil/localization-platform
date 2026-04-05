@@ -101,14 +101,21 @@ export class TextService {
       profileId: user.profileId
     };
 
-    if (dto.searchString) {
+    if (dto.searchStringByTranslation) {
       where.translations = {
         some: {
           value: {
-            contains: dto.searchString || '',
+            contains: dto.searchStringByTranslation || '',
             mode: 'insensitive'
           }
         }
+      };
+    }
+
+    if (dto.searchStringBykey) {
+      where.key = {
+        contains: dto.searchStringBykey || '',
+        mode: 'insensitive'
       };
     }
 

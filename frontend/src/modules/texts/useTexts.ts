@@ -6,7 +6,8 @@ import { toast } from 'vue3-toastify';
 export const LIMIT = 10;
 interface LoadTextsParams {
   page: number;
-  searchString: string;
+  searchByKey: string;
+  searchByTranslation: string;
 }
 export const useTexts = () => {
   const texts = ref<TextResponseDto[]>([]);
@@ -18,11 +19,12 @@ export const useTexts = () => {
   const { call: getTextsApi, isLoading: isTextsLoading } = getTexts;
   const { call: createTextApi, isLoading: isTextCreating } = createText;
 
-  const loadTexts = async ({ page, searchString }: LoadTextsParams) => {
+  const loadTexts = async ({ page, searchByKey, searchByTranslation }: LoadTextsParams) => {
     const { data } = await getTextsApi({
       limit: LIMIT,
       offset: (page - 1) * LIMIT,
-      searchString
+      searchStringBykey: searchByKey,
+      searchStringByTranslation: searchByTranslation
     });
 
     texts.value = data?.texts || [];

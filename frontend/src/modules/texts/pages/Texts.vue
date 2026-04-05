@@ -14,6 +14,7 @@ import List from '@/components/List.vue';
 import { toClientDate } from '@/shared/utils/dateUtils';
 import { RouteNames } from '@/router/routes';
 import Pagination from '@/components/Pagination.vue';
+import { useDebounce } from '@/composables/useDebounce';
 
 const { goToText } = useRouting();
 
@@ -28,13 +29,14 @@ const {
   resetCreateTextErrors
 } = useTexts();
 
-const search = ref('');
+const searchByKey = ref('');
+const searchByTranslation = ref('');
 const page = ref(1);
 
 const addTextModalController = useModal<undefined>({ closeHandler: resetCreateTextErrors });
 
 const onLoadTexts = async () => {
-  await loadTexts({ page: page.value, searchString: search.value });
+  await loadTexts({ page: page.value, searchByKey: searchByKey.value, searchByTranslation: searchByTranslation.value });
 };
 
 const onCreateNewText = async (key: string) => {
@@ -44,6 +46,11 @@ const onCreateNewText = async (key: string) => {
     goToText(result.key);
   }
 };
+
+const onSearch = useDebounce(() => {
+  page.value = 1;
+  onLoadTexts();
+});
 
 onMounted(() => {
   onLoadTexts();
@@ -55,13 +62,27 @@ onMounted(() => {
     <div>
       <div class="flex gap-4 w-full mb-8">
         <AppInput
-          v-model="search"
-          id="search"
-          placeholder="Search"
-          name="search"
+          v-model="searchByKey"
+          id="search_by_key"
+          placeholder="Search by text key"
+          name="search_by_key"
           class="flex-1"
           :disabled="isTextsLoading"
-          @update:modelValue="() => {}"
+          @update:modelValue="onSearch"
+        >
+          <template #label-icon>
+            <Search />
+          </template>
+        </AppInput>
+
+        <AppInput
+          v-model="searchByTranslation"
+          id="search_by_translation"
+          placeholder="Search by some of text translations"
+          name="search_by_translation"
+          class="flex-1"
+          :disabled="isTextsLoading"
+          @update:modelValue="onSearch"
         >
           <template #label-icon>
             <Search />

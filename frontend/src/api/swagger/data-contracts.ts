@@ -202,7 +202,8 @@ export interface DeleteLangParams {
 export interface GetTextsParams {
   limit: number;
   offset: number;
-  searchString?: string;
+  searchStringBykey?: string;
+  searchStringByTranslation?: string;
 }
 
 export interface GetTextByKeyParams {
