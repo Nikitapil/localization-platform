@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useField, type RuleExpression } from 'vee-validate';
+import { type RuleExpression } from 'vee-validate';
 import { computed, type InputHTMLAttributes, type MaybeRef } from 'vue';
+import { useFieldValidation } from './useFieldVavidation';
 
 interface Props {
   placeholder: string;
@@ -18,24 +19,12 @@ const props = defineProps<Props>();
 
 const model = defineModel<string>();
 
-const { errorMessage, validate, meta } = useField(props.name, props.rules, {
-  syncVModel: true,
-  validateOnMount: false,
-  validateOnValueUpdate: false,
-  label: props.validationName
+const { isError, error, handleChange } = useFieldValidation({
+  fieldName: props.name,
+  rules: props.rules,
+  validationName: props.validationName,
+  externalError: props.externalError
 });
-
-const isError = computed(() => {
-  return (meta.validated && errorMessage.value) || props.externalError;
-});
-
-const error = computed(() => errorMessage.value || props.externalError);
-
-const handleChange = () => {
-  if (isError.value) {
-    validate();
-  }
-};
 
 const classes = computed(() => ({
   'pt-4!': !!props.placeholder,
