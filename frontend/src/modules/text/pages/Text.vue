@@ -13,13 +13,15 @@ import { toast } from 'vue3-toastify';
 import { useRouting } from '@/router/useRouting';
 import type { AppSelectOption } from '@/components/controls/AppSelect/types';
 import TranslationForm from '../components/TranslationForm.vue';
+import FormSkeleton from '@/components/loaders/FormSkeleton.vue';
+import { RouteNames } from '@/router/routes';
 
 const route = useRoute();
 const { goToText } = useRouting();
 
 const { validate } = useForm();
 
-const { text, isTextLoading, isTextEditing, langs, editText, init } = useText();
+const { text, isTextLoading, isTextEditing, isLangsLoading, langs, editText, addTranslation, init } = useText();
 
 const isEditing = ref(false);
 
@@ -68,6 +70,14 @@ const onEditText = async () => {
       isEditing.value = false;
     }
   }
+};
+
+const onAddNewTranslation = async () => {
+  await addTranslation({
+    textKey: textKey.value,
+    langId: translationForm.value.lang,
+    value: translationForm.value.value
+  });
 };
 
 onMounted(() => {
@@ -119,12 +129,22 @@ onMounted(() => {
 
     <div v-else>
       <div class="w-full bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
+        <FormSkeleton v-if="isLangsLoading" />
         <TranslationForm
-          v-if="langsOptions.length"
+          v-else-if="langs.length"
           v-model="translationForm"
           title="Add new translation"
           :options="langsOptions"
+          @submit="onAddNewTranslation"
         />
+        <div v-else>
+          No available laguages.<RouterLink
+            :to="{ name: RouteNames.LANGS }"
+            class="underline"
+            >Add more languages</RouterLink
+          >
+          to create new translations for this text.
+        </div>
       </div>
     </div>
   </div>

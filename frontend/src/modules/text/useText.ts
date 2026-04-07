@@ -1,7 +1,9 @@
 import { ref } from 'vue';
-import type { TextResponseDto, LangResponseDto } from '../../api/swagger/data-contracts';
+import type { TextResponseDto, LangResponseDto, CreateTranslationDto } from '../../api/swagger/data-contracts';
 import { useTextApi } from '@/api/swagger/Text';
 import { useLangApi } from '@/api/swagger/Lang';
+import { useTranslationApi } from '@/api/swagger/Translation';
+import { toast } from 'vue3-toastify';
 
 export const useText = () => {
   const text = ref<TextResponseDto | null>(null);
@@ -13,6 +15,9 @@ export const useText = () => {
 
   const { getLangs } = useLangApi();
   const { isLoading: isLangsLoading, call: getLagsApi } = getLangs;
+
+  const { createTranslation } = useTranslationApi();
+  const { isLoading: isTranslationCreating, call: createTranslationApi } = createTranslation;
 
   // TODO сделать дропдаун с пагинацией по скроллу и нормальными лимитами оффсетам
   const loadLangs = async () => {
@@ -28,6 +33,16 @@ export const useText = () => {
     text.value = data || null;
   };
 
+  const addTranslation = async (params: CreateTranslationDto) => {
+    const { data, error } = await createTranslationApi(params);
+    if (error && typeof error === 'object' && 'message' in error) {
+      toast.error(error.message);
+    }
+    if (data) {
+      text.value?.translations.push(data);
+    }
+  };
+
   const init = async (key: string) => {
     Promise.all([loadText(key), loadLangs()]);
   };
@@ -37,8 +52,11 @@ export const useText = () => {
     langs,
     isTextLoading,
     isTextEditing,
+    isLangsLoading,
+    isTranslationCreating,
     loadText,
     editText,
+    addTranslation,
     init
   };
 };

@@ -49,7 +49,7 @@ export class TranslationService {
     const newTranslation = await this.prismaService.translation.create({
       data: {
         langId: dto.langId,
-        textKey: dto.textKey,
+        textKey: text.id,
         value: dto.value
       },
       include: {
