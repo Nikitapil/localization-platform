@@ -11,17 +11,37 @@ import AppButton from '@/components/buttons/AppButton.vue';
 import { useForm } from 'vee-validate';
 import { toast } from 'vue3-toastify';
 import { useRouting } from '@/router/useRouting';
+import type { AppSelectOption } from '@/components/controls/AppSelect/types';
+import TranslationForm from '../components/TranslationForm.vue';
 
 const route = useRoute();
 const { goToText } = useRouting();
 
 const { validate } = useForm();
 
-const { text, isTextLoading, isTextEditing, loadText, editText } = useText();
+const { text, isTextLoading, isTextEditing, langs, editText, init } = useText();
 
 const isEditing = ref(false);
 
+const translationForm = ref({
+  value: '',
+  lang: ''
+});
+
 const key = computed(() => (route.params.key as string) || '');
+
+const langsOptions = computed(() => {
+  const allUsedLangs = new Set(text.value?.translations.map((translation) => translation.lang.id));
+  return langs.value.reduce((acc: AppSelectOption[], lang) => {
+    if (!allUsedLangs.has(lang.id)) {
+      acc.push({
+        name: lang.name,
+        value: lang.id
+      });
+    }
+    return acc;
+  }, []);
+});
 
 const textKey = ref(key.value);
 
@@ -51,7 +71,7 @@ const onEditText = async () => {
 };
 
 onMounted(() => {
-  loadText(key.value);
+  init(key.value);
 });
 </script>
 
@@ -59,7 +79,7 @@ onMounted(() => {
   <div>
     <form
       v-if="isEditing"
-      class="flex gap-2"
+      class="flex gap-2 mb-4"
       v-click-outside="() => closeEditFormWithoutSave()"
       @submit.prevent="onEditText"
     >
@@ -79,9 +99,9 @@ onMounted(() => {
 
     <div
       v-else
-      class="flex gap-2"
+      class="flex gap-2 mb-4"
     >
-      <h2 class="text-2xl font-bold text-heading mb-4 w-fit">{{ key }}</h2>
+      <h2 class="text-2xl font-bold text-heading w-fit">{{ key }}</h2>
       <IconButton
         v-if="text"
         :icon="Pen"
@@ -96,5 +116,16 @@ onMounted(() => {
       title=""
       text="Text not found"
     />
+
+    <div v-else>
+      <div class="w-full bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
+        <TranslationForm
+          v-if="langsOptions.length"
+          v-model="translationForm"
+          title="Add new translation"
+          :options="langsOptions"
+        />
+      </div>
+    </div>
   </div>
 </template>

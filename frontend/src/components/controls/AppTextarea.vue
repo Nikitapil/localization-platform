@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { computed, type InputHTMLAttributes } from 'vue';
-import { useFieldValidation } from './FieldValidation/useFieldVavidation';
 import FieldError from './FieldError.vue';
+import { useFieldValidation } from './FieldValidation/useFieldVavidation';
 import type { FieldValidationParams } from './FieldValidation/types';
 
 interface Props extends FieldValidationParams {
-  placeholder: string;
-  id: string;
-  inputmode?: InputHTMLAttributes['inputmode'];
-  type?: InputHTMLAttributes['type'];
+  placeholder?: string;
   disabled?: boolean;
+  id: string;
 }
 
 const props = defineProps<Props>();
@@ -22,28 +19,19 @@ const { isError, error, handleChange } = useFieldValidation({
   validationName: props.validationName,
   externalError: props.externalError
 });
-
-const classes = computed(() => ({
-  'pt-4!': !!props.placeholder,
-  'opacity-80 pointer-events-none bg-gray-100!': !!props.disabled,
-  'border-danger! focus:border-danger': isError.value
-}));
 </script>
 
 <template>
   <div>
     <div class="relative">
-      <input
+      <textarea
         v-model="model"
         :id="props.id"
-        :class="classes"
-        :type="props.type"
         :disabled="props.disabled"
-        class="block px-2.5 opac pb-2.5 pt-2.5 w-full text-sm text-heading bg-transparent rounded-base border-1 border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
         placeholder=" "
-        :inputmode="props.inputmode"
+        class="block px-2.5 opac pb-2.5 pt-2.5 w-full text-sm text-heading bg-transparent rounded-base border-1 border-default-medium appearance-none focus:outline-none focus:ring-0 focus:border-brand peer"
         @input="handleChange"
-      />
+      ></textarea>
 
       <label
         v-if="props.placeholder"
@@ -61,6 +49,7 @@ const classes = computed(() => ({
         {{ props.placeholder }}
       </label>
     </div>
+
     <FieldError
       v-if="isError && error"
       :error="error"

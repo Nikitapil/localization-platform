@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import AppButton from '../../../components/buttons/AppButton.vue';
 import type { ProfileUserWithId } from '../types';
-import AppSelect from '@/components/controls/AppSelect.vue';
+import AppSelect from '@/components/controls/AppSelect/AppSelect.vue';
 import { UserRole } from '@/api/swagger/data-contracts';
 
 const rolesOptions = [
@@ -54,6 +54,7 @@ const onChangeUserRole = () => emit('changeRole', { id: props.user.id, role: rol
         :id="props.user.id"
         :options="rolesOptions"
         :disabled="isLoading"
+        name="roles"
         label="User's role"
         @change="onChangeUserRole"
       />
