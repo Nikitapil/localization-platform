@@ -11,4 +11,9 @@ export class EditTranslationDto {
   @IsString()
   @IsNotEmpty()
   value: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsNotEmpty()
+  langId: string;
 }

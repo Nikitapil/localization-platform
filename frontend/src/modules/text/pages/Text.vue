@@ -17,6 +17,7 @@ import FormSkeleton from '@/components/loaders/FormSkeleton.vue';
 import { RouteNames } from '@/router/routes';
 import List from '@/components/List.vue';
 import Translation from '../components/Translation.vue';
+import Cancel from '@/components/icons/Cancel.vue';
 
 const route = useRoute();
 const { goToText } = useRouting();
@@ -37,6 +38,7 @@ const {
 } = useText();
 
 const isEditing = ref(false);
+const isShowAddTranslationForm = ref(false);
 
 const translationForm = ref({
   value: '',
@@ -141,7 +143,21 @@ onMounted(() => {
     />
 
     <div v-else>
-      <div class="w-full bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs mb-8">
+      <AppButton
+        v-if="!isShowAddTranslationForm"
+        class="mb-4"
+        text="Add translation"
+        @click="isShowAddTranslationForm = true"
+      />
+      <div
+        v-else
+        class="w-full relative bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs mb-8"
+      >
+        <IconButton
+          :icon="Cancel"
+          class="absolute top-5 right-5"
+          @click="isShowAddTranslationForm = false"
+        />
         <FormSkeleton v-if="isLangsLoading" />
         <TranslationForm
           v-else-if="langs.length"

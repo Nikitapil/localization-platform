@@ -7,6 +7,7 @@ import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import type { UserToken } from '../auth/types';
 import { TextTranslationDto } from './dto/Responses/TextTranslationDto';
 import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
+import { EditTranslationDto } from './dto/Requests/EditTranslationDto';
 
 @ApiTags('translation')
 @Controller('translation')
@@ -33,7 +34,7 @@ export class TranslationController {
   })
   @AuthRequired()
   @Put()
-  editTranslation(@Body() dto: TextTranslationDto): Promise<TextTranslationDto> {
+  editTranslation(@Body() dto: EditTranslationDto): Promise<TextTranslationDto> {
     return this.translationService.editTranslation(dto);
   }
 

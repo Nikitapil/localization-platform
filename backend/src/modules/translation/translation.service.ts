@@ -72,7 +72,8 @@ export class TranslationService {
     const translation = await this.prismaService.translation.update({
       where: { id: dto.id },
       data: {
-        value: dto.value
+        value: dto.value,
+        langId: dto.langId
       },
       include: {
         lang: true
