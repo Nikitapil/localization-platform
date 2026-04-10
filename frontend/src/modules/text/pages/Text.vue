@@ -15,13 +15,26 @@ import type { AppSelectOption } from '@/components/controls/AppSelect/types';
 import TranslationForm from '../components/TranslationForm.vue';
 import FormSkeleton from '@/components/loaders/FormSkeleton.vue';
 import { RouteNames } from '@/router/routes';
+import List from '@/components/List.vue';
+import Translation from '../components/Translation.vue';
 
 const route = useRoute();
 const { goToText } = useRouting();
 
 const { validate } = useForm();
 
-const { text, isTextLoading, isTextEditing, isLangsLoading, langs, editText, addTranslation, init } = useText();
+const {
+  text,
+  isTextLoading,
+  isTextEditing,
+  isLangsLoading,
+  isTranslationCreating,
+  langs,
+  editText,
+  addTranslation,
+  changeTranslation,
+  init
+} = useText();
 
 const isEditing = ref(false);
 
@@ -128,13 +141,14 @@ onMounted(() => {
     />
 
     <div v-else>
-      <div class="w-full bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
+      <div class="w-full bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs mb-8">
         <FormSkeleton v-if="isLangsLoading" />
         <TranslationForm
           v-else-if="langs.length"
           v-model="translationForm"
           title="Add new translation"
           :options="langsOptions"
+          :isLoading="isTranslationCreating"
           @submit="onAddNewTranslation"
         />
         <div v-else>
@@ -146,6 +160,20 @@ onMounted(() => {
           to create new translations for this text.
         </div>
       </div>
+
+      <List
+        v-if="text.translations.length"
+        :items="text.translations"
+        keyProperty="id"
+      >
+        <template #item="{ item }">
+          <Translation
+            :translation="item"
+            :availableLangsOptions="langsOptions"
+            @translationEdited="changeTranslation"
+          />
+        </template>
+      </List>
     </div>
   </div>
 </template>

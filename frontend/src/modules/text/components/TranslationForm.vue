@@ -8,6 +8,7 @@ import { useForm } from 'vee-validate';
 interface Props {
   title: string;
   options: AppSelectOption[];
+  isLoading: boolean;
 }
 
 interface Emits {
@@ -39,6 +40,7 @@ const onSubmit = async () => {
         id="language"
         label="Choose languaage"
         :options="props.options"
+        :disabled="isLoading"
         name="language"
         rules="required"
         validationName="Language"
@@ -50,11 +52,15 @@ const onSubmit = async () => {
         rules="required"
         validationName="Translation text"
         placeholder="Translation text"
+        :disabled="isLoading"
       />
-      <AppButton
-        text="Save"
-        class="ml-auto"
-      />
+      <div class="flex gap-2 ml-auto">
+        <slot name="actions"></slot>
+        <AppButton
+          text="Save"
+          :disabled="isLoading"
+        />
+      </div>
     </div>
   </form>
 </template>

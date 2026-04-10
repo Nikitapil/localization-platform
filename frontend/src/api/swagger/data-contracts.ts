@@ -178,6 +178,12 @@ export interface CreateTranslationDto {
   value: string;
 }
 
+export interface EditTranslationDto {
+  id: string;
+  value: string;
+  langId: string;
+}
+
 export interface GetIsProfileExistParams {
   name: string;
 }

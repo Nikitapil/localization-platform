@@ -14,6 +14,7 @@ import { useApi } from "../utils/useApi";
 import type {
   CreateTranslationDto,
   DeleteTranslationParams,
+  EditTranslationDto,
   SuccessMessageDto,
   TextTranslationDto,
 } from "./data-contracts";
@@ -50,7 +51,7 @@ export class TranslationApi<
    * @summary Edit translation
    * @request PUT:/api/translation
    */
-  editTranslation = (data: TextTranslationDto, params: RequestParams = {}) =>
+  editTranslation = (data: EditTranslationDto, params: RequestParams = {}) =>
     this.request<TextTranslationDto, any>({
       path: `/api/translation`,
       method: "PUT",

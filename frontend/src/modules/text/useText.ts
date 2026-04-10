@@ -1,5 +1,10 @@
 import { ref } from 'vue';
-import type { TextResponseDto, LangResponseDto, CreateTranslationDto } from '../../api/swagger/data-contracts';
+import type {
+  TextResponseDto,
+  LangResponseDto,
+  CreateTranslationDto,
+  TextTranslationDto
+} from '../../api/swagger/data-contracts';
 import { useTextApi } from '@/api/swagger/Text';
 import { useLangApi } from '@/api/swagger/Lang';
 import { useTranslationApi } from '@/api/swagger/Translation';
@@ -43,6 +48,20 @@ export const useText = () => {
     }
   };
 
+  const changeTranslation = (translation: TextTranslationDto) => {
+    if (!text.value) {
+      return;
+    }
+
+    text.value.translations = text.value.translations.map((currentTranslation) => {
+      if (currentTranslation.id === translation.id) {
+        return translation;
+      } else {
+        return currentTranslation;
+      }
+    });
+  };
+
   const init = async (key: string) => {
     Promise.all([loadText(key), loadLangs()]);
   };
@@ -57,6 +76,7 @@ export const useText = () => {
     loadText,
     editText,
     addTranslation,
-    init
+    init,
+    changeTranslation
   };
 };
