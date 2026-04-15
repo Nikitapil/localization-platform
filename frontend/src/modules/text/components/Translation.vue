@@ -9,6 +9,8 @@ import TrashBin from '@/components/icons/TrashBin.vue';
 import AppButton from '@/components/buttons/AppButton.vue';
 import { useTranslationApi } from '@/api/swagger/Translation';
 import { toast } from 'vue3-toastify';
+import { useModal } from '@/components/modals/utils';
+import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 
 interface Props {
   translation: TextTranslationDto;
@@ -17,12 +19,15 @@ interface Props {
 
 interface Emits {
   translationEdited: [TextTranslationDto];
+  translationDeleted: [string];
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const { editTranslation } = useTranslationApi();
+const { editTranslation, deleteTranslation } = useTranslationApi();
+
+const confirmDeleteModal = useModal();
 
 const isEditing = ref(false);
 
@@ -30,6 +35,8 @@ const translationForm = ref({
   lang: props.translation.lang.id,
   value: props.translation.value
 });
+
+const isLoading = computed(() => editTranslation.isLoading.value || deleteTranslation.isLoading.value);
 
 const langsOptions = computed(() => [
   { name: props.translation.lang.name, value: props.translation.lang.id },
@@ -70,6 +77,12 @@ const onEdit = async () => {
   }
   closeEditForm();
 };
+
+const onDelete = async () => {
+  const translationId = props.translation.id;
+  await deleteTranslation.call({ id: translationId });
+  emit('translationDeleted', translationId);
+};
 </script>
 
 <template>
@@ -81,7 +94,7 @@ const onEdit = async () => {
       v-model="translationForm"
       title="Edit translation"
       :options="langsOptions"
-      :isLoading="editTranslation.isLoading.value"
+      :isLoading="isLoading"
       @submit="onEdit"
     >
       <template #actions>
@@ -89,7 +102,7 @@ const onEdit = async () => {
           type="button"
           text="Cancel"
           appearence="transparent"
-          :disabled="editTranslation.isLoading.value"
+          :disabled="isLoading"
           @click="closeEditForm"
         />
       </template>
@@ -104,10 +117,20 @@ const onEdit = async () => {
           :icon="Pen"
           @click="openForm"
         />
-        <IconButton :icon="TrashBin" />
+        <IconButton
+          :icon="TrashBin"
+          @click="confirmDeleteModal.open"
+        />
       </div>
     </div>
 
     <p>{{ props.translation.value }}</p>
   </div>
+  <ConfirmModal
+    title="Delete confirmation"
+    content="Are you sure you want to delete this translation?"
+    :showableComponent="confirmDeleteModal"
+    @confirm="onDelete"
+    @cancel="confirmDeleteModal.close"
+  />
 </template>

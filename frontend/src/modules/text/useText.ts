@@ -62,6 +62,13 @@ export const useText = () => {
     });
   };
 
+  const removeTranslation = (id: string) => {
+    if (!text.value) {
+      return;
+    }
+    text.value.translations = text.value.translations.filter((translation) => translation.id !== id);
+  };
+
   const init = async (key: string) => {
     Promise.all([loadText(key), loadLangs()]);
   };
@@ -77,6 +84,7 @@ export const useText = () => {
     editText,
     addTranslation,
     init,
-    changeTranslation
+    changeTranslation,
+    removeTranslation
   };
 };

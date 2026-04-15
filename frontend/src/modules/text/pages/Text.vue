@@ -34,6 +34,7 @@ const {
   editText,
   addTranslation,
   changeTranslation,
+  removeTranslation,
   init
 } = useText();
 
@@ -160,7 +161,7 @@ onMounted(() => {
         />
         <FormSkeleton v-if="isLangsLoading" />
         <TranslationForm
-          v-else-if="langs.length"
+          v-else-if="langsOptions.length"
           v-model="translationForm"
           title="Add new translation"
           :options="langsOptions"
@@ -187,6 +188,7 @@ onMounted(() => {
             :translation="item"
             :availableLangsOptions="langsOptions"
             @translationEdited="changeTranslation"
+            @translationDeleted="removeTranslation"
           />
         </template>
       </List>
