@@ -14,9 +14,10 @@ export const useText = () => {
   const text = ref<TextResponseDto | null>(null);
   const langs = ref<LangResponseDto[]>([]);
 
-  const { getTextByKey, editText: editTextApi } = useTextApi();
+  const { getTextByKey, editText: editTextApi, deleteText } = useTextApi();
   const { isLoading: isTextLoading, call: getText } = getTextByKey;
   const { isLoading: isTextEditing, call: editText } = editTextApi;
+  const { isLoading: isTextDeliting, call: deleteTextApi } = deleteText;
 
   const { getLangs } = useLangApi();
   const { isLoading: isLangsLoading, call: getLagsApi } = getLangs;
@@ -80,11 +81,13 @@ export const useText = () => {
     isTextEditing,
     isLangsLoading,
     isTranslationCreating,
+    isTextDeliting,
     loadText,
     editText,
     addTranslation,
     init,
     changeTranslation,
-    removeTranslation
+    removeTranslation,
+    deleteText: deleteTextApi
   };
 };

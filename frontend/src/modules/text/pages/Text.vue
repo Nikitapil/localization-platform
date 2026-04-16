@@ -18,9 +18,12 @@ import { RouteNames } from '@/router/routes';
 import List from '@/components/List.vue';
 import Translation from '../components/Translation.vue';
 import Cancel from '@/components/icons/Cancel.vue';
+import { useModal } from '@/components/modals/utils';
+import ConfirmModal from '@/components/modals/ConfirmModal.vue';
+import TrashBin from '@/components/icons/TrashBin.vue';
 
 const route = useRoute();
-const { goToText } = useRouting();
+const { goToText, goToTexts } = useRouting();
 
 const { validate } = useForm();
 
@@ -30,13 +33,17 @@ const {
   isTextEditing,
   isLangsLoading,
   isTranslationCreating,
+  isTextDeliting,
   langs,
   editText,
   addTranslation,
   changeTranslation,
   removeTranslation,
+  deleteText,
   init
 } = useText();
+
+const confirmDeleteTextModal = useModal();
 
 const isEditing = ref(false);
 const isShowAddTranslationForm = ref(false);
@@ -94,6 +101,18 @@ const onAddNewTranslation = async () => {
     langId: translationForm.value.lang,
     value: translationForm.value.value
   });
+  translationForm.value = {
+    lang: '',
+    value: ''
+  };
+};
+
+const onDeleteText = async () => {
+  if (text.value) {
+    await deleteText({ key: text.value.key });
+    confirmDeleteTextModal.close();
+    goToTexts();
+  }
 };
 
 onMounted(() => {
@@ -133,9 +152,14 @@ onMounted(() => {
         :icon="Pen"
         @click.stop="isEditing = true"
       />
+      <IconButton
+        v-if="text"
+        :icon="TrashBin"
+        @click.stop="confirmDeleteTextModal.open"
+      />
     </div>
 
-    <OverlayLoader v-if="isTextLoading" />
+    <OverlayLoader v-if="isTextLoading || isTextDeliting" />
 
     <EmptyState
       v-else-if="!text"
@@ -193,5 +217,13 @@ onMounted(() => {
         </template>
       </List>
     </div>
+
+    <ConfirmModal
+      :showableComponent="confirmDeleteTextModal"
+      title="Cofirm text removal"
+      content="Are you sure you want to delete this text. All it's translations will be also deleted"
+      @confirm="onDeleteText"
+      @cancel="confirmDeleteTextModal.close"
+    />
   </div>
 </template>
