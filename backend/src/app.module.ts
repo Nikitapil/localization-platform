@@ -8,9 +8,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { LangModule } from './modules/lang/lang.module';
 import { TextModule } from './modules/text/text.module';
 import { TranslationModule } from './modules/translation/translation.module';
+import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 
 @Module({
-  imports: [PrismaModule, ProfileModule, UserModule, AuthModule, LangModule, TextModule, TranslationModule],
+  imports: [PrismaModule, ProfileModule, UserModule, AuthModule, LangModule, TextModule, TranslationModule, ApiKeysModule],
   providers: [
     {
       provide: APP_GUARD,
