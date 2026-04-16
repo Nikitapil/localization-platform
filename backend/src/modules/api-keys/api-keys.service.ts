@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ApiKeyResponseDto } from './dto/Responses/ApiKeyResponseDto';
+import { DeleteApiKeyParams } from './types';
+import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 
 @Injectable()
 export class ApiKeysService {
@@ -20,5 +22,20 @@ export class ApiKeysService {
     });
 
     return keys.map((key) => new ApiKeyResponseDto(key));
+  }
+
+  async deleteApiKey({ key, profileId }: DeleteApiKeyParams) {
+    const apiKey = await this.prismaService.apiKey.findUnique({ where: { key } });
+
+    if (!apiKey) {
+      throw new NotFoundException('Api key not found');
+    }
+
+    if (apiKey.profileId !== profileId) {
+      throw new ForbiddenException();
+    }
+
+    await this.prismaService.apiKey.delete({ where: { key } });
+    return new SuccessMessageDto();
   }
 }
