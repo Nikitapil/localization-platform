@@ -13,4 +13,12 @@ export class ApiKeysService {
 
     return new ApiKeyResponseDto(newKey);
   }
+
+  async getApiKeys(profileId: string) {
+    const keys = await this.prismaService.apiKey.findMany({
+      where: { profileId }
+    });
+
+    return keys.map((key) => new ApiKeyResponseDto(key));
+  }
 }

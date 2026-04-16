@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ApiKeysService } from './api-keys.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
@@ -11,7 +11,7 @@ import type { UserToken } from '../auth/types';
 export class ApiKeysController {
   constructor(private readonly service: ApiKeysService) {}
 
-  @ApiOperation({ summary: 'Create api ket', operationId: 'createApiKey' })
+  @ApiOperation({ summary: 'Create api key', operationId: 'createApiKey' })
   @ApiResponse({
     status: 201,
     description: 'Api key created..',
@@ -21,5 +21,17 @@ export class ApiKeysController {
   @Post()
   createApiKey(@User() user: UserToken): Promise<ApiKeyResponseDto> {
     return this.service.createApiKey(user.profileId);
+  }
+
+  @ApiOperation({ summary: 'Return api keys', operationId: 'getApiKeys' })
+  @ApiResponse({
+    status: 200,
+    description: 'Api key created..',
+    type: [ApiKeyResponseDto]
+  })
+  @AuthRequired()
+  @Get()
+  getApiKeys(@User() user: UserToken): Promise<ApiKeyResponseDto[]> {
+    return this.service.getApiKeys(user.profileId);
   }
 }
