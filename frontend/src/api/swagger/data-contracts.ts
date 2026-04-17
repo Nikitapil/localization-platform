@@ -184,6 +184,10 @@ export interface EditTranslationDto {
   langId: string;
 }
 
+export interface ApiKeyResponseDto {
+  key: string;
+}
+
 export interface GetIsProfileExistParams {
   name: string;
 }
@@ -222,4 +226,8 @@ export interface DeleteTextParams {
 
 export interface DeleteTranslationParams {
   id: string;
+}
+
+export interface DeleteApiKeyParams {
+  key: string;
 }

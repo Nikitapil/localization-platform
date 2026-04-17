@@ -11,6 +11,7 @@ import ProfileUsers from '@/modules/profile/pages/ProfileUsers/ProfileUsers.vue'
 import Langs from '@/modules/profile/pages/Langs/Langs.vue';
 import Texts from '@/modules/texts/pages/Texts.vue';
 import Text from '@/modules/text/pages/Text.vue';
+import ApiKeys from '@/modules/profile/pages/ApiKeys/ApiKeys.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,11 @@ const router = createRouter({
           name: RouteNames.LANGS,
           path: 'langs',
           component: Langs
+        },
+        {
+          name: RouteNames.API_KEYS,
+          path: 'api-keys',
+          component: ApiKeys
         }
       ]
     }

@@ -43,7 +43,7 @@ export class ApiKeysController {
     type: SuccessMessageDto
   })
   @AuthRequired()
-  @Delete('key')
+  @Delete(':key')
   deleteApiKey(@Param('key') key: string, @User() user: UserToken): Promise<SuccessMessageDto> {
     return this.service.deleteApiKey({ key, profileId: user.profileId });
   }

@@ -9,5 +9,6 @@ export enum RouteNames {
   LANGS = 'lang',
   CHANGE_PASSWORD = 'change_password',
   TEXTS = 'texts',
-  TEXT = 'text'
+  TEXT = 'text',
+  API_KEYS = 'api_keys'
 }

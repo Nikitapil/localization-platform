@@ -8,6 +8,7 @@ import UserCircle from '@/components/icons/UserCircle.vue';
 import { useMyProfile } from '../useMyProfile';
 import Spinner from '@/components/loaders/Spinner.vue';
 import Language from '@/components/icons/Language.vue';
+import ApiKey from '@/components/icons/ApiKey.vue';
 
 const { getMyProfile, isProfileLoading, isEditProfileInProgress, editProfileErrors, profile, editProfile } =
   useMyProfile();
@@ -45,6 +46,14 @@ getMyProfile();
             >
               <template #icon>
                 <Language />
+              </template>
+            </NavListLink>
+            <NavListLink
+              text="Api keys"
+              :to="{ name: RouteNames.API_KEYS }"
+            >
+              <template #icon>
+                <ApiKey />
               </template>
             </NavListLink>
           </li>
