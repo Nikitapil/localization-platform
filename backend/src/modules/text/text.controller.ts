@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { TextService } from './text.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { CreateTextDto } from './dto/Requests/CreateTextDto';
@@ -10,6 +10,10 @@ import { SuccessMessageDto } from '../../dto/SuccessMessageDto';
 import { EditTextDto } from './dto/Requests/EditTextDto';
 import { GetTextsDto } from './dto/Requests/GetTextsDto';
 import { TextsListResponseDto } from './dto/Responses/TextsListResponseDto';
+import { GetTextsByKeysDto } from './dto/Requests/GetTextsByKeysDto';
+import { ApiKeyGuard } from '../auth/guards/api-key.guard';
+import { ApiKey } from '../auth/decorators/ApiKey.decorator';
+import type { ApiKey as ApiKeyType } from 'generated/prisma';
 
 @ApiTags('text')
 @Controller('text')
@@ -74,5 +78,11 @@ export class TextController {
   @Get()
   getTexts(@Query() dto: GetTextsDto, @User() user: UserToken): Promise<TextsListResponseDto> {
     return this.textService.getTexts({ dto, user });
+  }
+
+  @UseGuards(ApiKeyGuard)
+  @Post('by-keys')
+  getTextsByKeys(@Body() dto: GetTextsByKeysDto, @ApiKey() apiKey: ApiKeyType) {
+    return this.textService.getTextsByKeys({ dto, profileId: apiKey.profileId });
   }
 }

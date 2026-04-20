@@ -3,6 +3,7 @@ import { CreateTextDto } from './dto/Requests/CreateTextDto';
 import { EditTextDto } from './dto/Requests/EditTextDto';
 import { GetTextsDto } from './dto/Requests/GetTextsDto';
 import { TextTranslationFromDb } from '../translation/types';
+import { GetTextsByKeysDto } from './dto/Requests/GetTextsByKeysDto';
 
 export interface CreateTextParams {
   dto: CreateTextDto;
@@ -45,4 +46,9 @@ export interface TextFromDb {
   profileId: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface GetTextsByKeysParams {
+  dto: GetTextsByKeysDto;
+  profileId: string;
 }
