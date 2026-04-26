@@ -172,6 +172,10 @@ export interface TextsListResponseDto {
   totalCount: number;
 }
 
+export interface GetTextsByKeysDto {
+  keys: string[];
+}
+
 export interface CreateTranslationDto {
   langId: string;
   textKey: string;
@@ -230,4 +234,8 @@ export interface DeleteTranslationParams {
 
 export interface DeleteApiKeyParams {
   key: string;
+}
+
+export interface DownloadLangTranslationsParams {
+  langId: string;
 }

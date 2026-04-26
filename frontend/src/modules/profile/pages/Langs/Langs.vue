@@ -14,6 +14,7 @@ import { useModal } from '@/components/modals/utils';
 import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 import type { LangResponseDto } from '@/api/swagger/data-contracts';
 import LoadMoreTrigger from '@/components/LoadMoreTrigger.vue';
+import JSONfile from '@/components/icons/JSONfile.vue';
 
 const {
   isInitialLoading,
@@ -27,7 +28,8 @@ const {
   editLangById,
   deleteLangById,
   resetSaveErrors,
-  loadMoreLangs
+  loadMoreLangs,
+  dowloadJsonTranslations
 } = useLangs();
 
 const langFormModalController = useModal<{ lang?: LangResponseDto }>({ closeHandler: resetSaveErrors });
@@ -101,6 +103,10 @@ onMounted(init);
               <p class="text-sm text-body truncate">Creation date: {{ toClientDate(item.createdAt) }}</p>
             </div>
             <div class="inline-flex items-center space-x-1.5">
+              <IconButton
+                :icon="JSONfile"
+                @click="dowloadJsonTranslations(item)"
+              />
               <IconButton
                 :icon="Pen"
                 @click="onClickEditLang(item)"

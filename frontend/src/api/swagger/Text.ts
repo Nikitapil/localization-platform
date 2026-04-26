@@ -16,6 +16,7 @@ import type {
   DeleteTextParams,
   EditTextDto,
   GetTextByKeyParams,
+  GetTextsByKeysDto,
   GetTextsParams,
   SuccessMessageDto,
   TextResponseDto,
@@ -112,6 +113,24 @@ export class TextApi<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags text
+   * @name TextControllerGetTextsByKeys
+   * @request POST:/api/text/by-keys
+   */
+  textControllerGetTextsByKeys = (
+    data: GetTextsByKeysDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/api/text/by-keys`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      ...params,
+    });
 }
 
 const instance = new TextApi();
@@ -123,5 +142,8 @@ export const useTextApi = () => {
     getTexts: useApi(instance.getTexts),
     getTextByKey: useApi(instance.getTextByKey),
     deleteText: useApi(instance.deleteText),
+    TextController_getTextsByKeys: useApi(
+      instance.TextController_getTextsByKeys,
+    ),
   };
 };
