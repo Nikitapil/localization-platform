@@ -2,7 +2,8 @@ import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import path from 'path';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { promises as fs, createReadStream } from 'fs';
-import { ExportTranslationToJsonParams } from './types';
+import { ExportTranslationToJsonParams, UploadTranslationByFileParams } from './types';
+import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
 
 @Injectable()
 export class TranslationFilesService {
@@ -73,5 +74,41 @@ export class TranslationFilesService {
       }
       throw error;
     }
+  }
+
+  async uploadTranslationsByFile({ file, dto, user }: UploadTranslationByFileParams) {
+    const lang = await this.prismaService.lang.findUnique({
+      where: { id: dto.langId, profileId: user.profileId },
+      select: { id: true }
+    });
+
+    if (!lang) {
+      throw new NotFoundException({ message: 'Language not found' });
+    }
+
+    const data: Record<string, string> = JSON.parse(file.buffer.toString('utf8'));
+
+    const upserts = Object.keys(data).map(async (item) => {
+      const text = await this.prismaService.text.upsert({
+        where: { key_profileId: { key: item, profileId: user.profileId } },
+        update: {},
+        create: {
+          key: item,
+          profileId: user.profileId,
+          userId: user.id,
+          translations: {
+            create: { langId: dto.langId, value: data[item] }
+          }
+        }
+      });
+      await this.prismaService.translation.upsert({
+        where: { textKey_langId: { textKey: text.id, langId: dto.langId } },
+        update: { value: data[item] },
+        create: { textKey: text.id, value: data[item], langId: dto.langId }
+      });
+    });
+
+    await Promise.all(upserts);
+    return new SuccessMessageDto();
   }
 }

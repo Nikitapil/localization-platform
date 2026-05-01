@@ -1,10 +1,26 @@
-import { Controller, Get, Header, Query, StreamableFile } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  FileTypeValidator,
+  Get,
+  Header,
+  ParseFilePipe,
+  Post,
+  Query,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors
+} from '@nestjs/common';
 import { TranslationFilesService } from './translation-files.service';
 import { AuthRequired } from '../auth/decorators/AuthRequired.decorator';
 import { ExportTranslationsToJsonDto } from './dto/Requests/ExportTranslationsToJsonDto';
 import { User } from '../auth/decorators/User.decorator';
 import { type UserToken } from '../auth/types';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { SuccessMessageDto } from 'src/dto/SuccessMessageDto';
+import { UploadTranslationsByJsonBody } from './dto/Requests/UploadTranslationsByJsonBody';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadTranslationsByJsonDto } from './dto/Requests/UploadTranslationsByJsonDto';
 @Controller('translation-files')
 export class TranslationFilesController {
   constructor(private readonly translationsFilesService: TranslationFilesService) {}
@@ -44,5 +60,29 @@ export class TranslationFilesController {
     @User() user: UserToken
   ): Promise<StreamableFile> {
     return this.translationsFilesService.exportLangTranslationsToJson({ dto, user });
+  }
+
+  @AuthRequired()
+  @ApiOperation({ summary: 'Upload translations by json', operationId: 'uploadTranslationsByJson' })
+  @ApiResponse({ status: 200, type: SuccessMessageDto })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload translations by json body',
+    type: UploadTranslationsByJsonBody
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload-translations')
+  // TODO file format validation
+  async uploadTranslationsByJson(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: 'application/json', skipMagicNumbersValidation: true })]
+      })
+    )
+    file: Express.Multer.File,
+    @Body() dto: UploadTranslationsByJsonDto,
+    @User() user: UserToken
+  ) {
+    return this.translationsFilesService.uploadTranslationsByFile({ file, dto, user });
   }
 }

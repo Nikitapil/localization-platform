@@ -192,6 +192,12 @@ export interface ApiKeyResponseDto {
   key: string;
 }
 
+export interface UploadTranslationsByJsonBody {
+  langId: string;
+  /** @format binary */
+  file: File;
+}
+
 export interface GetIsProfileExistParams {
   name: string;
 }

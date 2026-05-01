@@ -6,7 +6,7 @@ import { useTranslationFilesApi } from '@/api/swagger/TranslationFiles';
 
 export const useLangs = () => {
   const { getLangs, addLang, deleteLang, editLang } = useLangApi();
-  const { downloadLangTranslations } = useTranslationFilesApi();
+  const { downloadLangTranslations, uploadTranslationsByJson } = useTranslationFilesApi();
 
   const langs = ref<LangResponseDto[]>([]);
   const totalLangsCount = ref<number>(0);
@@ -17,6 +17,7 @@ export const useLangs = () => {
   const { isLoading: isAddLangInProgress, call: addLangApi } = addLang;
   const { isLoading: isDeleteLangInProgress, call: deleteLangApi } = deleteLang;
   const { isLoading: isEditLangInProgress, call: editLangApi } = editLang;
+  const { isLoading: isFileUploading, call: uploadJson } = uploadTranslationsByJson;
 
   const hasMoreLangs = computed(() => langs.value.length < totalLangsCount.value);
 
@@ -108,6 +109,7 @@ export const useLangs = () => {
     isAddLangInProgress,
     isDeleteLangInProgress,
     isEditLangInProgress,
+    isFileUploading,
     saveLangErrors,
     init,
     loadMoreLangs,
@@ -115,6 +117,7 @@ export const useLangs = () => {
     deleteLangById,
     editLangById,
     resetSaveErrors,
-    dowloadJsonTranslations
+    dowloadJsonTranslations,
+    uploadJson
   };
 };

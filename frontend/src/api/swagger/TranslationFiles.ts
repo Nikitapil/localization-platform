@@ -11,8 +11,12 @@
  */
 
 import { useApi } from "../utils/useApi";
-import type { DownloadLangTranslationsParams } from "./data-contracts";
-import { HttpClient, type RequestParams } from "./http-client";
+import type {
+  DownloadLangTranslationsParams,
+  SuccessMessageDto,
+  UploadTranslationsByJsonBody,
+} from "./data-contracts";
+import { ContentType, HttpClient, type RequestParams } from "./http-client";
 
 export class TranslationFilesApi<
   SecurityDataType = unknown,
@@ -36,6 +40,26 @@ export class TranslationFilesApi<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags TranslationFiles
+   * @name UploadTranslationsByJson
+   * @summary Upload translations by json
+   * @request POST:/api/translation-files/upload-translations
+   */
+  uploadTranslationsByJson = (
+    data: UploadTranslationsByJsonBody,
+    params: RequestParams = {},
+  ) =>
+    this.request<SuccessMessageDto, any>({
+      path: `/api/translation-files/upload-translations`,
+      method: "POST",
+      body: data,
+      type: ContentType.FormData,
+      format: "json",
+      ...params,
+    });
 }
 
 const instance = new TranslationFilesApi();
@@ -43,5 +67,6 @@ const instance = new TranslationFilesApi();
 export const useTranslationFilesApi = () => {
   return {
     downloadLangTranslations: useApi(instance.downloadLangTranslations),
+    uploadTranslationsByJson: useApi(instance.uploadTranslationsByJson),
   };
 };

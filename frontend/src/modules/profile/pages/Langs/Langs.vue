@@ -15,6 +15,9 @@ import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 import type { LangResponseDto } from '@/api/swagger/data-contracts';
 import LoadMoreTrigger from '@/components/LoadMoreTrigger.vue';
 import JSONfile from '@/components/icons/JSONfile.vue';
+import FileUploader from '@/components/FileUploader.vue';
+import Upload from '@/components/icons/Upload.vue';
+import { toast } from 'vue3-toastify';
 
 const {
   isInitialLoading,
@@ -23,13 +26,15 @@ const {
   langs,
   saveLangErrors,
   hasMoreLangs,
+  isFileUploading,
   init,
   addNewLang,
   editLangById,
   deleteLangById,
   resetSaveErrors,
   loadMoreLangs,
-  dowloadJsonTranslations
+  dowloadJsonTranslations,
+  uploadJson
 } = useLangs();
 
 const langFormModalController = useModal<{ lang?: LangResponseDto }>({ closeHandler: resetSaveErrors });
@@ -60,6 +65,11 @@ const onDeleteLang = () => {
     deleteLangById(deleteLangModal.payload.value?.id);
     deleteLangModal.close();
   }
+};
+
+const onUploadJson = async (langId: string, file: File) => {
+  await uploadJson({ langId, file });
+  toast.success('Translations successfully uploaded');
 };
 
 onMounted(init);
@@ -103,16 +113,29 @@ onMounted(init);
               <p class="text-sm text-body truncate">Creation date: {{ toClientDate(item.createdAt) }}</p>
             </div>
             <div class="inline-flex items-center space-x-1.5">
+              <FileUploader
+                :id="`${item.id}_json-uploader`"
+                accept=".json"
+                :loading="isFileUploading"
+                @upload="onUploadJson(item.id, $event)"
+              >
+                <template #trigger>
+                  <IconButton :icon="Upload" />
+                </template>
+              </FileUploader>
               <IconButton
                 :icon="JSONfile"
+                :disabled="isFileUploading"
                 @click="dowloadJsonTranslations(item)"
               />
               <IconButton
                 :icon="Pen"
+                :disabled="isFileUploading"
                 @click="onClickEditLang(item)"
               />
               <IconButton
                 :icon="TrashBin"
+                :disabled="isFileUploading"
                 class="text-red-500"
                 @click="onClickDeleteLang(item)"
               />

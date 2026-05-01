@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const className = computed(() => {
   let classes =
-    'border border-transparent focus:ring-4 shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none cursor-pointer flex items-center';
+    'border border-transparent focus:ring-4 shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none cursor-pointer flex gap-2 items-center';
 
   if (props.appearence === 'primary' && !props.disabled) {
     classes += ' text-white bg-brand focus:ring-brand-medium hover:bg-brand-strong';
@@ -56,7 +56,6 @@ const className = computed(() => {
     <span class="mx-auto">
       {{ props.text }}
     </span>
-
     <slot name="append"></slot>
   </button>
 </template>
