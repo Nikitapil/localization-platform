@@ -19,7 +19,6 @@ export interface AppConfig {
   keyFilePath?: string;
   outPutDir?: string;
 }
-
 export interface TextLangFromApi {
   id: string;
 

@@ -19,7 +19,8 @@ const router = createRouter({
     {
       name: RouteNames.MAIN,
       path: '/',
-      component: MainPage
+      component: MainPage,
+      meta: { withoutMainContainer: true }
     },
     {
       name: RouteNames.AUTH,
