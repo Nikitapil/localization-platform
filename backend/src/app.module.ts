@@ -10,6 +10,7 @@ import { TextModule } from './modules/text/text.module';
 import { TranslationModule } from './modules/translation/translation.module';
 import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 import { TranslationFilesModule } from './modules/translation-files/translation-files.module';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { TranslationFilesModule } from './modules/translation-files/translation-
     TextModule,
     TranslationModule,
     ApiKeysModule,
-    TranslationFilesModule
+    TranslationFilesModule,
+    StatisticsModule
   ],
   providers: [
     {
