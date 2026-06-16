@@ -5,7 +5,7 @@ import CtaSection from '../components/CtaSection.vue';
 import DemoSection from '../components/DemoSection.vue';
 import { useAuthStore } from '@/shared/auth/AuthStore.ts';
 import LanguageProgress from '../components/LanguageProgress.vue';
-import StatsGrid from '../components/StatsGrid.vue';
+import StatsGrid from '../components/Statistics/StatsGrid.vue';
 import WelcomeBanner from '../components/WelcomeBanner.vue';
 
 const store = useAuthStore();

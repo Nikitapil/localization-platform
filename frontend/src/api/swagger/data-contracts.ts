@@ -198,6 +198,12 @@ export interface UploadTranslationsByJsonBody {
   file: File;
 }
 
+export interface ProfileStatisticsResponseDto {
+  totalLangs: number;
+  totalTexts: number;
+  totalProfileUsers: number;
+}
+
 export interface GetIsProfileExistParams {
   name: string;
 }
