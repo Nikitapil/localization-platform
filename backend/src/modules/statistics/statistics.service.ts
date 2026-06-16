@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserToken } from '../auth/types';
+import { select } from '@inquirer/prompts';
+import { LangsStatisticResponseDto } from './dto/Responses/LangsStatisticResponseDto';
 
 @Injectable()
 export class StatisticsService {
@@ -20,5 +22,24 @@ export class StatisticsService {
     ]);
 
     return { totalLangs, totalTexts, totalProfileUsers };
+  }
+
+  async getLangsStatistics(user: UserToken) {
+    const langs = await this.prismaService.lang.findMany({
+      where: { profileId: user.profileId },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            translations: true
+          }
+        }
+      }
+    });
+
+    const totalTextsCount = await this.prismaService.text.count({ where: { profileId: user.profileId } });
+
+    return langs.map((lang) => new LangsStatisticResponseDto({ lang, totalTextsCount }));
   }
 }

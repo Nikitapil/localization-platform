@@ -5,6 +5,7 @@ import { User } from '../auth/decorators/User.decorator';
 import type { UserToken } from '../auth/types';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProfileStatisticsResponseDto } from './dto/Responses/ProfileStatisticResponseDto';
+import { LangsStatisticResponseDto } from './dto/Responses/LangsStatisticResponseDto';
 
 @Controller('statistics')
 export class StatisticsController {
@@ -20,5 +21,17 @@ export class StatisticsController {
   @Get('profile')
   getProfileStatistics(@User() user: UserToken): Promise<ProfileStatisticsResponseDto> {
     return this.statisticsService.getProfileStatistics(user);
+  }
+
+  @ApiOperation({ summary: 'Get langs statistics', operationId: 'getLangsStatistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Langs statistics..',
+    type: [LangsStatisticResponseDto]
+  })
+  @AuthRequired()
+  @Get('langs')
+  getLangsStatistics(@User() user: UserToken): Promise<LangsStatisticResponseDto[]> {
+    return this.statisticsService.getLangsStatistics(user);
   }
 }
