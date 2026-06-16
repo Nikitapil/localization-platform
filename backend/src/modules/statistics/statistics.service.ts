@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserToken } from '../auth/types';
-import { select } from '@inquirer/prompts';
 import { LangsStatisticResponseDto } from './dto/Responses/LangsStatisticResponseDto';
 
 @Injectable()
