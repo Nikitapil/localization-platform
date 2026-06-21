@@ -4,8 +4,8 @@ import FeaturesSection from '../components/FeaturesSection.vue';
 import CtaSection from '../components/CtaSection.vue';
 import DemoSection from '../components/DemoSection.vue';
 import { useAuthStore } from '@/shared/auth/AuthStore.ts';
-import LanguageProgress from '../components/LanguageProgress.vue';
-import StatsGrid from '../components/Statistics/StatsGrid.vue';
+import LanguagesStats from '../components/LangsStats/LanguagesStats.vue';
+import ProfileStatsGrid from '../components/ProfileStats/ProfileStatsGrid.vue';
 import WelcomeBanner from '../components/WelcomeBanner.vue';
 
 const store = useAuthStore();
@@ -16,9 +16,8 @@ const store = useAuthStore();
     <template v-if="store.user">
       <div class="container mx-auto px-1 py-4">
         <WelcomeBanner :name="store.user.name" />
-        <!-- TODO продолжить тут -->
-        <StatsGrid />
-        <LanguageProgress />
+        <ProfileStatsGrid />
+        <LanguagesStats />
       </div>
     </template>
 

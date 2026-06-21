@@ -22,11 +22,14 @@ export class LangsStatisticResponseDto {
   totalTranslationsCount: number;
   @ApiProperty({ type: Number })
   translationProgress: number;
+  @ApiProperty({ type: Number })
+  totalTextsCount: number;
 
   constructor({ lang, totalTextsCount }: LangsStatisticResponseDtoParams) {
     this.id = lang.id;
     this.totalTranslationsCount = lang._count.translations;
     this.langName = lang.name;
     this.translationProgress = (this.totalTranslationsCount / totalTextsCount) * 100;
+    this.totalTextsCount = totalTextsCount;
   }
 }

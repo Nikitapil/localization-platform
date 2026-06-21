@@ -204,6 +204,14 @@ export interface ProfileStatisticsResponseDto {
   totalProfileUsers: number;
 }
 
+export interface LangsStatisticResponseDto {
+  id: string;
+  langName: string;
+  totalTranslationsCount: number;
+  translationProgress: number;
+  totalTextsCount: number;
+}
+
 export interface GetIsProfileExistParams {
   name: string;
 }

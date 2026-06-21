@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import StatCard from './StatCard.vue';
-import { useStats } from './useStats.ts';
+import ProfileStatCard from './ProfileStatCard.vue';
+import { useProfileStats } from './useProfileStats.ts';
 import FormSkeleton from '@/components/loaders/FormSkeleton.vue';
 import { RouteNames } from '@/router/routes.ts';
 
-const { statistics, getStatistics, isStatisticsLoading } = useStats();
+const { statistics, getStatistics, isStatisticsLoading } = useProfileStats();
 
 const stats = computed(() => {
   if (!statistics.value) {
@@ -37,7 +37,7 @@ onMounted(() => {
     </template>
 
     <template v-else-if="stats">
-      <StatCard
+      <ProfileStatCard
         v-for="stat in stats"
         :key="stat.label"
         :label="stat.label"

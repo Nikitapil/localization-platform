@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import type { ProfileStatisticsResponseDto } from '../../../../api/swagger/data-contracts';
 import { useStatisticsApi } from '@/api/swagger/Statistics';
 
-export const useStats = () => {
+export const useProfileStats = () => {
   const statistics = ref<ProfileStatisticsResponseDto | null>(null);
 
   const {

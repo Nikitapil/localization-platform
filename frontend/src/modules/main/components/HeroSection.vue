@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+  <section class="pt-16 pb-20 md:pb-28 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center container">
       <div
         class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-6"
